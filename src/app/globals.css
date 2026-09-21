@@ -1,0 +1,194 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-sans);
+  --font-mono: var(--font-geist-mono);
+  --font-heading: var(--font-sans);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+
+  /* Notion palette utilities (bg-*, text-*, border-*) */
+  --color-ink: var(--color-ink-black);
+  --color-graphite: var(--color-graphite);
+  --color-stone: var(--color-stone);
+  --color-slate: var(--color-slate);
+  --color-paper: var(--color-paper-warmth);
+  --color-mist: var(--color-mist);
+  --color-blue: var(--color-notion-blue);
+  --color-sky-tint: var(--color-sky-tint);
+  --color-sky-wash: var(--color-sky-wash);
+  --color-signal-blue: var(--color-signal-blue);
+  --color-marigold: var(--color-marigold);
+  --color-coral: var(--color-coral);
+  --color-saffron: var(--color-saffron);
+  --color-vermillion: var(--color-vermillion);
+  --color-mocha: var(--color-mocha);
+  --color-midnight: var(--color-midnight-ink);
+
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
+}
+
+:root {
+  /* Notion design tokens — see DESIGN.md */
+  --color-notion-blue: #0075de;
+  --color-paper-warmth: #f6f5f4;
+  --color-pure-white: #ffffff;
+  --color-ink-black: #000000;
+  --color-charcoal: #111111;
+  --color-stone: #757575;
+  --color-graphite: #615d59;
+  --color-slate: #696969;
+  --color-sky-tint: #e6f3fe;
+  --color-marigold: #ffb110;
+  --color-coral: #f64932;
+  --color-saffron: #e89d01;
+  --color-vermillion: #e32d14;
+  --color-mocha: #b18164;
+  --color-signal-blue: #097fe8;
+  --color-sky-wash: #62aef0;
+  --color-midnight-ink: #02093a;
+  /* Practical UI-utility gray for track fills / connector lines — not part of
+     the marketing palette table, derived to sit between paper and stone. */
+  --color-mist: #e8e6e2;
+
+  --background: var(--color-paper-warmth);
+  --foreground: var(--color-ink-black);
+  --card: var(--color-pure-white);
+  --card-foreground: var(--color-ink-black);
+  --popover: var(--color-pure-white);
+  --popover-foreground: var(--color-ink-black);
+  --primary: var(--color-notion-blue);
+  --primary-foreground: var(--color-pure-white);
+  --secondary: var(--color-sky-tint);
+  --secondary-foreground: var(--color-notion-blue);
+  --muted: var(--color-paper-warmth);
+  --muted-foreground: var(--color-graphite);
+  --accent: var(--color-sky-tint);
+  --accent-foreground: var(--color-notion-blue);
+  --destructive: var(--color-coral);
+  --border: rgb(0 0 0 / 8%);
+  --input: rgb(0 0 0 / 12%);
+  --ring: var(--color-notion-blue);
+  --chart-1: var(--color-coral);
+  --chart-2: var(--color-marigold);
+  --chart-3: var(--color-signal-blue);
+  --chart-4: var(--color-mocha);
+  --chart-5: var(--color-stone);
+  --radius: 0.75rem;
+  --sidebar: var(--color-pure-white);
+  --sidebar-foreground: var(--color-graphite);
+  --sidebar-primary: var(--color-notion-blue);
+  --sidebar-primary-foreground: var(--color-pure-white);
+  --sidebar-accent: var(--color-sky-tint);
+  --sidebar-accent-foreground: var(--color-notion-blue);
+  --sidebar-border: rgb(0 0 0 / 8%);
+  --sidebar-ring: var(--color-notion-blue);
+}
+
+.dark {
+  --background: #191817;
+  --foreground: var(--color-pure-white);
+  --card: #232221;
+  --card-foreground: var(--color-pure-white);
+  --popover: #232221;
+  --popover-foreground: var(--color-pure-white);
+  --primary: var(--color-notion-blue);
+  --primary-foreground: var(--color-pure-white);
+  --secondary: #2d2b29;
+  --secondary-foreground: var(--color-sky-wash);
+  --muted: #2d2b29;
+  --muted-foreground: #a8a29b;
+  --accent: #2d2b29;
+  --accent-foreground: var(--color-sky-wash);
+  --destructive: var(--color-coral);
+  --border: rgb(255 255 255 / 10%);
+  --input: rgb(255 255 255 / 14%);
+  --ring: var(--color-notion-blue);
+  --chart-1: var(--color-coral);
+  --chart-2: var(--color-marigold);
+  --chart-3: var(--color-sky-wash);
+  --chart-4: var(--color-mocha);
+  --chart-5: #a8a29b;
+  --sidebar: #191817;
+  --sidebar-foreground: #d4d0cb;
+  --sidebar-primary: var(--color-notion-blue);
+  --sidebar-primary-foreground: var(--color-pure-white);
+  --sidebar-accent: #2d2b29;
+  --sidebar-accent-foreground: var(--color-sky-wash);
+  --sidebar-border: rgb(255 255 255 / 10%);
+  --sidebar-ring: var(--color-notion-blue);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+  html {
+    @apply font-sans;
+  }
+}
+
+/* Wash de fundo dos portais (gestão/colaborador): mesma dupla de cores do
+   gradiente da tela de login (notion-blue -> midnight-ink), só que como um
+   brilho bem sutil nos cantos em vez de um gradiente cheio — para não
+   comprometer a leitura de texto/tabelas no dia a dia do painel. */
+@utility bg-app-wash {
+  background-color: var(--color-paper-warmth);
+  background-image:
+    radial-gradient(circle 640px at 0% 0%, color-mix(in oklab, var(--color-notion-blue) 9%, transparent) 0%, transparent 70%),
+    radial-gradient(circle 720px at 100% 0%, color-mix(in oklab, var(--color-midnight-ink) 6%, transparent) 0%, transparent 65%);
+  background-attachment: fixed;
+}
+
+/* Elevação suave para os cards "destaque" dos dashboards (stat cards, cards
+   de formulário, widgets de gráfico) — o resto do sistema segue flat/hairline
+   (ver DESIGN.md), essa sombra é uma exceção deliberada só para esses widgets
+   que precisam se destacar sobre o bg-app-wash. */
+@utility shadow-elevated {
+  box-shadow: 0 1px 2px rgba(2, 9, 58, 0.04), 0 12px 28px -16px rgba(2, 9, 58, 0.18);
+}
+@utility shadow-elevated-lg {
+  box-shadow: 0 2px 4px rgba(2, 9, 58, 0.06), 0 20px 36px -16px rgba(2, 9, 58, 0.26);
+}

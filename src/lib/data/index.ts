@@ -13,6 +13,8 @@ export {
   getAtribuicoesByFormulario,
   getAtribuicao,
   createAtribuicoes,
+  getAtribuicaoById,
+  atualizarStatusAtribuicao,
 } from "@/lib/data/atribuicoes";
 export {
   getRespostaByAtribuicao,

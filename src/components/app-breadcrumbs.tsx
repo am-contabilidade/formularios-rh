@@ -95,8 +95,6 @@ function buildCrumbs(
     }
   } else if (segments[1] === "colaboradores") {
     crumbs.push({ label: "Colaboradores" });
-  } else if (segments[1] === "acessos") {
-    crumbs.push({ label: "Gestão de acessos" });
   } else if (segments[1] === "relatorios") {
     crumbs.push({ label: "Relatórios" });
   }

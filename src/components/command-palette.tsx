@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { useRouter } from "next/navigation";
-import { ClipboardList, FileSpreadsheet, FileText, LayoutDashboard, ShieldCheck, Users } from "lucide-react";
+import { ClipboardList, FileSpreadsheet, FileText, LayoutDashboard, Users } from "lucide-react";
 
 import {
   CommandDialog,
@@ -96,7 +96,6 @@ export function CommandPalette({
           { label: "Painel", href: "/gestao", icon: LayoutDashboard },
           { label: "Formulários", href: "/gestao/formularios", icon: ClipboardList },
           { label: "Colaboradores", href: "/gestao/colaboradores", icon: Users },
-          { label: "Gestão de acessos", href: "/gestao/acessos", icon: ShieldCheck },
           { label: "Relatórios", href: "/gestao/relatorios", icon: FileSpreadsheet },
         ];
 

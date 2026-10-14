@@ -28,7 +28,6 @@ const gestaoItems = [
   { title: "Painel", url: "/gestao", icon: iconesNavegacao.painel },
   { title: "Formulários", url: "/gestao/formularios", icon: iconesNavegacao.formularios },
   { title: "Colaboradores", url: "/gestao/colaboradores", icon: iconesNavegacao.colaboradores },
-  { title: "Gestão de acessos", url: "/gestao/acessos", icon: iconesNavegacao.acessos },
   { title: "Relatórios", url: "/gestao/relatorios", icon: iconesNavegacao.relatorios },
 ];
 

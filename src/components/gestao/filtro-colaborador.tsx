@@ -14,6 +14,7 @@ import {
   CommandList,
 } from "@/components/ui/command";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { filtrarPorTrecho } from "@/components/search-select";
 
 export interface OpcaoColaborador {
   id: string;
@@ -62,7 +63,7 @@ export function FiltroColaborador({
         <ChevronsUpDown className="opacity-50" />
       </PopoverTrigger>
       <PopoverContent align="start" className="w-(--anchor-width) min-w-72 p-0">
-        <Command>
+        <Command filter={filtrarPorTrecho}>
           <CommandInput placeholder="Buscar colaborador..." />
           <CommandList>
             <CommandEmpty>Nenhum colaborador encontrado.</CommandEmpty>

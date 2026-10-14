@@ -2,9 +2,12 @@ import { Suspense } from "react";
 import { PageHeader } from "@/components/page-header";
 import { iconesNavegacao } from "@/components/icones-navegacao";
 import { FiltrosSkeleton, TabelaSkeleton } from "@/components/skeletons";
-import { ColaboradoresLista } from "@/components/gestao/colaboradores-lista";
+import {
+  ColaboradoresGestao,
+  type LinhaColaboradorGestao,
+} from "@/components/gestao/colaboradores-gestao";
 import { COLUNAS_COLABORADORES } from "@/components/gestao/colunas";
-import { getAtribuicoes, getColaboradores } from "@/lib/data";
+import { getAtribuicoes, getColaboradores, getFormularios } from "@/lib/data";
 
 export default function GestaoColaboradoresPage() {
   return (
@@ -13,12 +16,12 @@ export default function GestaoColaboradoresPage() {
         eyebrow="AM Automação"
         title="Colaboradores"
         icon={iconesNavegacao.colaboradores}
-        description="Todos os colaboradores cadastrados e o andamento dos formulários de cada um."
+        description="Todos os colaboradores e os formulários de cada um. Clique em um colaborador para liberar ou bloquear acessos, ver respostas e vincular a novos formulários."
       />
       <Suspense
         fallback={
           <div className="flex flex-col gap-4">
-            <FiltrosSkeleton />
+            <FiltrosSkeleton selects={3} />
             <TabelaSkeleton colunas={COLUNAS_COLABORADORES} linhas={10} />
           </div>
         }
@@ -30,18 +33,24 @@ export default function GestaoColaboradoresPage() {
 }
 
 async function ListaColaboradores() {
-  const [colaboradores, atribuicoes] = await Promise.all([getColaboradores(), getAtribuicoes()]);
-  const linhas = colaboradores.map((colaborador) => {
-    const doColaborador = atribuicoes.filter((a) => a.colaboradorId === colaborador.id);
-    return {
-      colaborador,
-      totalAtribuidos: doColaborador.length,
-      totalRespondidos: doColaborador.filter((a) => a.status === "respondido").length,
-      totalPendentes: doColaborador.filter(
-        (a) => a.status === "aguardando" || a.status === "em_andamento"
-      ).length,
-      totalBloqueados: doColaborador.filter((a) => a.status === "bloqueado").length,
-    };
-  });
-  return <ColaboradoresLista linhas={linhas} />;
+  const [colaboradores, atribuicoes, formularios] = await Promise.all([
+    getColaboradores(),
+    getAtribuicoes(),
+    getFormularios(),
+  ]);
+  const titulos = new Map(formularios.map((f) => [f.id, f.titulo]));
+
+  const linhas: LinhaColaboradorGestao[] = colaboradores.map((colaborador) => ({
+    colaborador,
+    vinculos: atribuicoes
+      .filter((a) => a.colaboradorId === colaborador.id && titulos.has(a.formularioId))
+      .map((atribuicao) => ({ atribuicao, formularioTitulo: titulos.get(atribuicao.formularioId)! })),
+  }));
+
+  return (
+    <ColaboradoresGestao
+      linhas={linhas}
+      formularios={formularios.map((f) => ({ id: f.id, titulo: f.titulo }))}
+    />
+  );
 }

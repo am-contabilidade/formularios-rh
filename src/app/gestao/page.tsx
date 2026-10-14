@@ -24,8 +24,8 @@ export default function GestaoDashboardPage() {
         icon={iconesNavegacao.painel}
         description="Acompanhe a adesão aos formulários de RH em toda a empresa."
         actions={
-          <Button render={<Link href="/gestao/acessos" />} nativeButton={false}>
-            Gerenciar acessos
+          <Button render={<Link href="/gestao/colaboradores" />} nativeButton={false}>
+            Gerenciar colaboradores
           </Button>
         }
       />

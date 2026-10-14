@@ -15,13 +15,7 @@ import {
 } from "@/components/ui/command";
 import { Label } from "@/components/ui/label";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { SearchSelect, filtrarPorTrecho } from "@/components/search-select";
 import { urlExportacao } from "@/lib/relatorios/url";
 
 export interface OpcaoRelatorio {
@@ -56,26 +50,22 @@ export function ExportarRelatorio({ opcoes }: { opcoes: OpcaoRelatorio[] }) {
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
         <div className="flex flex-col gap-2">
           <Label>Formulário</Label>
-          <Select
+          <SearchSelect
+            aria-label="Formulário"
             value={formularioId}
             onValueChange={(v) => {
-              setFormularioId(v ?? "");
+              setFormularioId(v);
               setColaboradorId("");
             }}
-          >
-            <SelectTrigger className="w-full">
-              <SelectValue placeholder="Escolha um formulário">
-                {formulario?.titulo}
-              </SelectValue>
-            </SelectTrigger>
-            <SelectContent>
-              {opcoes.map((o) => (
-                <SelectItem key={o.formularioId} value={o.formularioId}>
-                  {o.titulo} ({o.respondentes.length})
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+            options={opcoes.map((o) => ({
+              value: o.formularioId,
+              label: o.titulo,
+              detalhe: `${o.respondentes.length} ${o.respondentes.length === 1 ? "resposta" : "respostas"}`,
+            }))}
+            placeholder="Escolha um formulário"
+            searchPlaceholder="Buscar formulário..."
+            className="w-full"
+          />
         </div>
 
         <div className="flex flex-col gap-2">
@@ -105,7 +95,7 @@ export function ExportarRelatorio({ opcoes }: { opcoes: OpcaoRelatorio[] }) {
               <ChevronsUpDown className="opacity-50" />
             </PopoverTrigger>
             <PopoverContent align="start" className="w-(--anchor-width) min-w-72 p-0">
-              <Command>
+              <Command filter={filtrarPorTrecho}>
                 <CommandInput placeholder="Buscar colaborador..." />
                 <CommandList>
                   <CommandEmpty>Nenhum colaborador encontrado.</CommandEmpty>

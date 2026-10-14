@@ -5,13 +5,7 @@ import Link from "next/link";
 import { Search, UsersRound } from "lucide-react";
 
 import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { SearchSelect } from "@/components/search-select";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import {
@@ -28,6 +22,7 @@ import { EmptyState } from "@/components/empty-state";
 import { COLUNAS_COLABORADORES_FORMULARIO } from "@/components/gestao/colunas";
 import { PaginacaoTabela, usePaginacao } from "@/components/paginacao-tabela";
 import type { Atribuicao, Colaborador, StatusAcesso } from "@/lib/types";
+import { statusAcessoLabel } from "@/lib/labels";
 
 const PAGE_SIZE = 5;
 
@@ -81,18 +76,20 @@ export function ColaboradoresTabela({
               className="pl-8"
             />
           </div>
-          <Select value={status} onValueChange={(v) => setStatus((v ?? "todos") as StatusAcesso | "todos")}>
-            <SelectTrigger className="w-full sm:w-48">
-              <SelectValue placeholder="Status" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="todos">Todos os status</SelectItem>
-              <SelectItem value="aguardando">Aguardando</SelectItem>
-              <SelectItem value="em_andamento">Em andamento</SelectItem>
-              <SelectItem value="respondido">Respondido</SelectItem>
-              <SelectItem value="bloqueado">Bloqueado</SelectItem>
-            </SelectContent>
-          </Select>
+          <SearchSelect
+            aria-label="Status"
+            value={status}
+            onValueChange={(v) => setStatus(v as StatusAcesso | "todos")}
+            options={[
+              { value: "todos", label: "Todos os status" },
+              ...(Object.keys(statusAcessoLabel) as StatusAcesso[]).map((st) => ({
+                value: st,
+                label: statusAcessoLabel[st],
+              })),
+            ]}
+            searchPlaceholder="Buscar status..."
+            className="w-full sm:w-48"
+          />
         </div>
 
         {filtradas.length === 0 ? (

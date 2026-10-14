@@ -83,6 +83,24 @@ async function getAtribuicaoSemCache(
   return data ? mapAtribuicao(data) : undefined;
 }
 
+export async function getAtribuicaoById(id: string): Promise<Atribuicao | undefined> {
+  const { data, error } = await supabaseAdmin()
+    .from("formularios_atribuicoes")
+    .select(SELECT)
+    .eq("id", id)
+    .maybeSingle();
+  if (error) throw new Error(`getAtribuicaoById: ${error.message}`);
+  return data ? mapAtribuicao(data) : undefined;
+}
+
+export async function atualizarStatusAtribuicao(id: string, status: StatusAcesso): Promise<void> {
+  const { error } = await supabaseAdmin()
+    .from("formularios_atribuicoes")
+    .update({ status, liberado_em: status === "bloqueado" ? null : new Date().toISOString().slice(0, 10) })
+    .eq("id", id);
+  if (error) throw new Error(`atualizarStatusAtribuicao: ${error.message}`);
+}
+
 // Deduplica leituras repetidas na mesma requisição (ex.: título e corpo da
 // página em <Suspense> separados).
 export const getAtribuicoes = cache(getAtribuicoesSemCache);

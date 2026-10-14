@@ -27,16 +27,16 @@ export function FeaturedDeadline({
   const dias = diasRestantes(atribuicao.prazo);
 
   return (
-    <div className="flex flex-col gap-5 overflow-hidden rounded-lg bg-marigold px-8 py-8 sm:flex-row sm:items-center sm:justify-between">
+    <div className="flex flex-col gap-5 overflow-hidden rounded-xl border border-amber-200 bg-amber-50 px-8 py-8 sm:flex-row sm:items-center sm:justify-between">
       <div className="flex flex-col gap-2">
-        <span className="inline-flex items-center gap-1.5 text-[12px] font-medium tracking-[0.3px] text-saffron uppercase">
+        <span className="inline-flex items-center gap-1.5 text-[12px] font-medium tracking-[0.3px] text-amber-700 uppercase">
           <CalendarClock className="size-3.5" />
           Prazo se aproximando
         </span>
-        <h3 className="text-[24px] leading-[1.2] font-semibold text-black">
+        <h3 className="text-[24px] leading-[1.2] font-semibold text-foreground font-heading">
           {formulario.titulo}
         </h3>
-        <p className="max-w-lg text-[14px] text-black/70">
+        <p className="max-w-lg text-[14px] text-muted-foreground">
           Faltam {dias} {dias === 1 ? "dia" : "dias"} para o prazo final, em{" "}
           {formatarData(atribuicao.prazo)}. Reserve {formulario.estimativaMinutos} minutos para
           concluir.
@@ -44,7 +44,7 @@ export function FeaturedDeadline({
       </div>
       <Button
         size="lg"
-        className="shrink-0 bg-black text-white hover:bg-black/85"
+        className="shrink-0"
         render={<Link href={`/colaborador/formularios/${formulario.id}`} />}
         nativeButton={false}
       >

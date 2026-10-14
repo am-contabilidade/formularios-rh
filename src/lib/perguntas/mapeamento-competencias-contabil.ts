@@ -1,0 +1,500 @@
+/**
+ * Perguntas do formulário "Mapeamento de Competências Técnicas — Analista
+ * Contábil" (docs/Mapeamento de Competências Técnicas — Analista
+ * Contábil.docx), em construção junto com o usuário — ainda em memória, sem
+ * persistência no banco. Conforme as seções forem fechadas, migram para
+ * `formularios_secoes`/`formularios_campos`.
+ *
+ * Esse docx usa uma redação própria para a escala de domínio técnico
+ * (diferente da usada em Fiscal/Legalização), por isso tem sua própria
+ * legenda em vez de reaproveitar `escalaAvaliacaoLegenda`.
+ */
+import type { SecaoFormulario } from "@/lib/types";
+import { criarCampoCompetencia, type EscalaCompetenciaItem } from "@/lib/perguntas/escala-competencia";
+
+export const escalaDominioTecnicoContabil: EscalaCompetenciaItem[] = [
+  { nota: "1", nivel: "Não domino", significado: "Não possuo conhecimento suficiente para executar a atividade." },
+  {
+    nota: "2",
+    nivel: "Conhecimento básico",
+    significado: "Conheço o conceito, mas preciso de orientação para executar.",
+  },
+  {
+    nota: "3",
+    nivel: "Domínio operacional",
+    significado: "Consigo executar a atividade com autonomia na maioria das situações.",
+  },
+  {
+    nota: "4",
+    nivel: "Domínio avançado",
+    significado: "Executo com autonomia, identifico inconsistências e soluciono problemas.",
+  },
+  {
+    nota: "5",
+    nivel: "Referência técnica",
+    significado:
+      "Domino profundamente, soluciono situações complexas e consigo orientar outros profissionais.",
+  },
+  { nota: "N/A", nivel: "Não se aplica", significado: "Não se aplica à minha função." },
+];
+
+const campoCompetencia = criarCampoCompetencia(escalaDominioTecnicoContabil);
+
+export const mensagemFinalMapeamentoCompetenciasContabil =
+  "Obrigado pela sua participação. Este mapeamento será utilizado para compreender o nível de domínio técnico da equipe e direcionar ações de capacitação, desenvolvimento e evolução profissional. Sua participação e sinceridade são fundamentais para construirmos um diagnóstico real e um plano de desenvolvimento alinhado às necessidades da equipe e da empresa.";
+
+export const secoesMapeamentoCompetenciasContabil: SecaoFormulario[] = [
+  {
+    id: "secao-1-identificacao",
+    titulo: "Seção 1 — Identificação",
+    campos: [
+      {
+        id: "nome-completo",
+        tipo: "texto",
+        label: "Nome completo",
+        obrigatorio: true,
+      },
+      {
+        id: "cargo-atual",
+        tipo: "radio",
+        label: "Cargo atual",
+        obrigatorio: true,
+        opcoes: ["Analista Contábil Júnior", "Analista Contábil Pleno", "Analista Contábil Sênior", "Outro"],
+      },
+      {
+        id: "tempo-atuacao-area-contabil",
+        tipo: "radio",
+        label: "Tempo de atuação na área contábil",
+        obrigatorio: true,
+        opcoes: ["Até 1 ano", "De 1 a 2 anos", "De 2 a 4 anos", "De 4 a 6 anos", "Mais de 6 anos"],
+      },
+      {
+        id: "tempo-atuacao-empresa",
+        tipo: "radio",
+        label: "Tempo de atuação na empresa",
+        obrigatorio: true,
+        opcoes: ["Até 6 meses", "6 meses a 1 ano", "1 a 2 anos", "2 a 5 anos", "Mais de 5 anos"],
+      },
+    ],
+  },
+  {
+    id: "secao-2-escala-avaliacao",
+    titulo: "Seção 2 — Escala de Domínio Técnico",
+    descricao: "Para as próximas perguntas, considere a seguinte escala:",
+    campos: [],
+  },
+  {
+    id: "secao-3-fundamentos-contabeis",
+    titulo: "Seção 3 — Fundamentos Contábeis",
+    descricao: "Avalie seu nível de domínio em:",
+    campos: [
+      campoCompetencia("fund-principios-conceitos", "Princípios e conceitos fundamentais da contabilidade"),
+      campoCompetencia("fund-regime-competencia", "Regime de competência"),
+      campoCompetencia("fund-regime-caixa", "Regime de caixa"),
+      campoCompetencia("fund-plano-contas", "Plano de contas"),
+      campoCompetencia("fund-classificacao-contabil", "Classificação contábil"),
+      campoCompetencia("fund-debitos-creditos", "Débitos e créditos"),
+      campoCompetencia("fund-escrituracao-contabil", "Escrituração contábil"),
+      campoCompetencia("fund-conciliacao-contabil", "Conciliação contábil"),
+      campoCompetencia("fund-lancamentos-contabeis", "Lançamentos contábeis"),
+      campoCompetencia("fund-correcao-erros", "Identificação e correção de erros contábeis"),
+      campoCompetencia("fund-documentacao-suporte", "Documentação suporte dos lançamentos"),
+      campoCompetencia("fund-analise-saldos", "Análise de saldos contábeis"),
+    ],
+  },
+  {
+    id: "secao-4-conciliacao-analise",
+    titulo: "Seção 4 — Conciliação e Análise Contábil",
+    descricao: "Avalie seu domínio em:",
+    campos: [
+      campoCompetencia("concil-bancaria", "Conciliação bancária"),
+      campoCompetencia("concil-clientes", "Conciliação de clientes"),
+      campoCompetencia("concil-fornecedores", "Conciliação de fornecedores"),
+      campoCompetencia("concil-impostos", "Conciliação de impostos"),
+      campoCompetencia("concil-folha-pagamento", "Conciliação de folha de pagamento"),
+      campoCompetencia("concil-emprestimos-financiamentos", "Conciliação de empréstimos e financiamentos"),
+      campoCompetencia("concil-contas-patrimoniais", "Conciliação de contas patrimoniais"),
+      campoCompetencia("concil-identificacao-divergencias", "Identificação de divergências"),
+      campoCompetencia("concil-investigacao-origem-diferencas", "Investigação da origem de diferenças"),
+      campoCompetencia("concil-correcao-inconsistencias", "Correção de inconsistências"),
+      campoCompetencia("concil-analise-composicao-saldos", "Análise de composição de saldos"),
+      campoCompetencia("concil-analise-critica-contas", "Análise crítica das contas contábeis"),
+      campoCompetencia("concil-lancamentos-indevidos", "Identificação de lançamentos indevidos"),
+      campoCompetencia("concil-validacao-documentacao", "Validação da documentação contábil"),
+    ],
+  },
+  {
+    id: "secao-5-fechamento-contabil",
+    titulo: "Seção 5 — Fechamento Contábil",
+    descricao: "Avalie seu domínio em:",
+    campos: [
+      campoCompetencia("fechamento-rotinas-mensal", "Rotinas de fechamento mensal"),
+      campoCompetencia("fechamento-conferencia-lancamentos", "Conferência dos lançamentos"),
+      campoCompetencia("fechamento-apropriacao-despesas", "Apropriação de despesas"),
+      campoCompetencia("fechamento-provisoes-contabeis", "Provisões contábeis"),
+      campoCompetencia("fechamento-depreciacao", "Depreciação"),
+      campoCompetencia("fechamento-amortizacao", "Amortização"),
+      campoCompetencia("fechamento-ajustes-contabeis", "Ajustes contábeis"),
+      campoCompetencia("fechamento-apropriacao-receitas", "Apropriação de receitas"),
+      campoCompetencia("fechamento-contas-patrimoniais", "Fechamento das contas patrimoniais"),
+      campoCompetencia("fechamento-contas-resultado", "Fechamento das contas de resultado"),
+      campoCompetencia("fechamento-analise-resultado-mensal", "Análise do resultado mensal"),
+      campoCompetencia("fechamento-pendencias-antes-fechamento", "Identificação de pendências antes do fechamento"),
+      campoCompetencia("fechamento-cumprimento-cronograma", "Cumprimento do cronograma de fechamento"),
+      campoCompetencia("fechamento-checklists", "Elaboração de checklists de fechamento"),
+    ],
+  },
+  {
+    id: "secao-6-demonstracoes-contabeis",
+    titulo: "Seção 6 — Demonstrações Contábeis",
+    descricao: "Avalie seu domínio em:",
+    campos: [
+      campoCompetencia("demonstracoes-balanco-patrimonial", "Balanço Patrimonial"),
+      campoCompetencia("demonstracoes-dre", "DRE — Demonstração do Resultado do Exercício"),
+      campoCompetencia("demonstracoes-dfc", "DFC — Demonstração dos Fluxos de Caixa"),
+      campoCompetencia("demonstracoes-dmpl", "DMPL — Demonstração das Mutações do Patrimônio Líquido"),
+      campoCompetencia("demonstracoes-notas-explicativas", "Notas explicativas"),
+      campoCompetencia("demonstracoes-estrutura", "Estrutura das demonstrações contábeis"),
+      campoCompetencia("demonstracoes-analise-variacoes", "Análise das variações das demonstrações"),
+      campoCompetencia("demonstracoes-identificacao-inconsistencias", "Identificação de inconsistências"),
+      campoCompetencia("demonstracoes-interpretacao-indicadores", "Interpretação dos principais indicadores contábeis"),
+      campoCompetencia(
+        "demonstracoes-preparacao-apresentacao-cliente",
+        "Preparação das demonstrações para apresentação ao cliente"
+      ),
+    ],
+  },
+  {
+    id: "secao-7-obrigacoes-escrituracao-digital",
+    titulo: "Seção 7 — Obrigações Acessórias e Escrituração Digital",
+    descricao: "Avalie seu domínio em:",
+    campos: [
+      campoCompetencia("obrigdig-ecd", "ECD — Escrituração Contábil Digital"),
+      campoCompetencia("obrigdig-ecf", "ECF — Escrituração Contábil Fiscal"),
+      campoCompetencia("obrigdig-sped", "SPED"),
+      campoCompetencia("obrigdig-validacao-antes-transmissao", "Validação de informações antes da transmissão"),
+      campoCompetencia("obrigdig-identificacao-erros", "Identificação de erros nas obrigações"),
+      campoCompetencia("obrigdig-correcao-inconsistencias", "Correção de inconsistências"),
+      campoCompetencia("obrigdig-cruzamento-informacoes", "Cruzamento de informações"),
+      campoCompetencia("obrigdig-cumprimento-prazos", "Cumprimento de prazos"),
+      campoCompetencia("obrigdig-organizacao-documentos", "Organização dos documentos necessários"),
+      campoCompetencia("obrigdig-retificacao", "Retificação de obrigações acessórias"),
+      campoCompetencia(
+        "obrigdig-integracao-fiscal-contabil-financeiro",
+        "Integração entre informações fiscais, contábeis e financeiras"
+      ),
+    ],
+  },
+  {
+    id: "secao-8-tributacao-impactos-contabeis",
+    titulo: "Seção 8 — Tributação e Impactos Contábeis",
+    descricao: "Avalie seu domínio em:",
+    campos: [
+      campoCompetencia("tributacao-simples-nacional", "Regime do Simples Nacional"),
+      campoCompetencia("tributacao-lucro-presumido", "Lucro Presumido"),
+      campoCompetencia("tributacao-lucro-real", "Lucro Real"),
+      campoCompetencia("tributacao-irpj", "IRPJ"),
+      campoCompetencia("tributacao-csll", "CSLL"),
+      campoCompetencia("tributacao-pis", "PIS"),
+      campoCompetencia("tributacao-cofins", "COFINS"),
+      campoCompetencia("tributacao-retencoes", "Retenções tributárias"),
+      campoCompetencia("tributacao-contabilizacao-tributos", "Contabilização de tributos"),
+      campoCompetencia("tributacao-provisao-tributos", "Provisão de tributos"),
+      campoCompetencia("tributacao-recuperacao-creditos", "Recuperação de créditos tributários"),
+      campoCompetencia("tributacao-impactos-contabilidade", "Identificação de impactos tributários na contabilidade"),
+      campoCompetencia("tributacao-integracao-fiscal-contabil", "Integração entre departamento Fiscal e Contábil"),
+      campoCompetencia("tributacao-mudancas-legislacao", "Análise de mudanças na legislação tributária"),
+      campoCompetencia("tributacao-impactos-reforma", "Impactos contábeis da Reforma Tributária"),
+    ],
+  },
+  {
+    id: "secao-9-contabilizacao-operacoes",
+    titulo: "Seção 9 — Contabilização de Operações",
+    descricao: "Avalie seu domínio em:",
+    campos: [
+      campoCompetencia("contabop-compras", "Contabilização de compras"),
+      campoCompetencia("contabop-vendas", "Contabilização de vendas"),
+      campoCompetencia("contabop-despesas", "Contabilização de despesas"),
+      campoCompetencia("contabop-receitas", "Contabilização de receitas"),
+      campoCompetencia("contabop-folha-pagamento", "Contabilização de folha de pagamento"),
+      campoCompetencia("contabop-encargos", "Contabilização de encargos"),
+      campoCompetencia("contabop-impostos", "Contabilização de impostos"),
+      campoCompetencia("contabop-imobilizado", "Contabilização de imobilizado"),
+      campoCompetencia("contabop-emprestimos", "Contabilização de empréstimos"),
+      campoCompetencia("contabop-financiamentos", "Contabilização de financiamentos"),
+      campoCompetencia("contabop-investimentos", "Contabilização de investimentos"),
+      campoCompetencia("contabop-distribuicao-lucros", "Contabilização de distribuição de lucros"),
+      campoCompetencia("contabop-pro-labore", "Contabilização de pró-labore"),
+      campoCompetencia("contabop-operacoes-socios", "Contabilização de operações com sócios"),
+      campoCompetencia("contabop-operacoes-nao-recorrentes", "Contabilização de operações não recorrentes"),
+    ],
+  },
+  {
+    id: "secao-10-imobilizado-depreciacao-patrimonio",
+    titulo: "Seção 10 — Imobilizado, Depreciação e Patrimônio",
+    descricao: "Avalie seu domínio em:",
+    campos: [
+      campoCompetencia("imob-classificacao-ativos", "Classificação de ativos"),
+      campoCompetencia("imob-reconhecimento-ativo", "Reconhecimento do ativo imobilizado"),
+      campoCompetencia("imob-controle-imobilizado", "Controle do imobilizado"),
+      campoCompetencia("imob-calculo-depreciacao", "Cálculo da depreciação"),
+      campoCompetencia("imob-vida-util", "Vida útil dos ativos"),
+      campoCompetencia("imob-baixa-ativos", "Baixa de ativos"),
+      campoCompetencia("imob-venda-imobilizado", "Venda de imobilizado"),
+      campoCompetencia("imob-inventario-patrimonial", "Inventário patrimonial"),
+      campoCompetencia("imob-conciliacao-ativo", "Conciliação do ativo imobilizado"),
+      campoCompetencia("imob-inconsistencias-patrimoniais", "Identificação de inconsistências patrimoniais"),
+    ],
+  },
+  {
+    id: "secao-11-legislacao-normas-contabeis",
+    titulo: "Seção 11 — Legislação e Normas Contábeis",
+    descricao: "Avalie seu domínio em:",
+    campos: [
+      campoCompetencia("legisnorm-lei-6404", "Lei nº 6.404/76"),
+      campoCompetencia("legisnorm-normas-brasileiras", "Normas Brasileiras de Contabilidade"),
+      campoCompetencia("legisnorm-pronunciamentos-cpc", "Pronunciamentos do CPC"),
+      campoCompetencia("legisnorm-itg-2000", "ITG 2000 — Escrituração Contábil"),
+      campoCompetencia("legisnorm-nbc-tg", "NBC TG aplicáveis às empresas"),
+      campoCompetencia("legisnorm-normas-demonstracoes", "Normas relacionadas às demonstrações contábeis"),
+      campoCompetencia("legisnorm-atualizacao-legislacao", "Atualização sobre alterações na legislação"),
+      campoCompetencia("legisnorm-pesquisar-interpretar", "Capacidade de pesquisar e interpretar normas"),
+      campoCompetencia("legisnorm-aplicacao-pratica", "Aplicação prática das normas contábeis"),
+      campoCompetencia("legisnorm-impactos-mudancas", "Identificação de impactos de mudanças normativas"),
+    ],
+  },
+  {
+    id: "secao-12-sistemas-tecnologia",
+    titulo: "Seção 12 — Sistemas e Tecnologia",
+    descricao: "Avalie seu domínio nos sistemas utilizados pela empresa:",
+    campos: [
+      campoCompetencia("sistemascontab-sistema-contabil", "Sistema contábil utilizado pela empresa"),
+      campoCompetencia("sistemascontab-integracao-fiscal-contabil", "Integração Fiscal → Contábil"),
+      campoCompetencia("sistemascontab-integracao-dp-contabil", "Integração Departamento Pessoal → Contábil"),
+      campoCompetencia("sistemascontab-importacao-lancamentos", "Importação de lançamentos"),
+      campoCompetencia("sistemascontab-parametrizacao-contabil", "Parametrização contábil"),
+      campoCompetencia("sistemascontab-conferencia-integracoes", "Conferência de integrações"),
+      campoCompetencia("sistemascontab-erros-integracao", "Identificação de erros de integração"),
+      campoCompetencia("sistemascontab-excel-intermediario", "Excel intermediário"),
+      campoCompetencia("sistemascontab-excel-avancado", "Excel avançado"),
+      campoCompetencia("sistemascontab-tabelas-dinamicas", "Tabelas dinâmicas"),
+      campoCompetencia("sistemascontab-formulas-funcoes", "Fórmulas e funções"),
+      campoCompetencia("sistemascontab-organizacao-analise-dados", "Organização e análise de dados"),
+      campoCompetencia("sistemascontab-ferramentas-automacao", "Utilização de ferramentas de automação"),
+      campoCompetencia(
+        "sistemascontab-ia-apoio",
+        "Utilização de Inteligência Artificial como apoio às atividades"
+      ),
+    ],
+  },
+  {
+    id: "secao-13-analise-critica-resolucao-problemas",
+    titulo: "Seção 13 — Análise Crítica e Resolução de Problemas",
+    descricao: "Avalie seu domínio em:",
+    campos: [
+      campoCompetencia("analisecrit-inconsistencias-contabeis", "Identificar inconsistências contábeis"),
+      campoCompetencia("analisecrit-investigar-causa", "Investigar a causa de um problema"),
+      campoCompetencia("analisecrit-informacoes-departamentos", "Analisar informações de diferentes departamentos"),
+      campoCompetencia("analisecrit-interpretar-dados-financeiros", "Interpretar dados financeiros"),
+      campoCompetencia("analisecrit-identificar-riscos", "Identificar riscos contábeis"),
+      campoCompetencia("analisecrit-propor-solucoes", "Propor soluções"),
+      campoCompetencia("analisecrit-corrigir-sem-comprometer", "Corrigir erros sem comprometer o fechamento"),
+      campoCompetencia("analisecrit-priorizar-problemas", "Priorizar problemas críticos"),
+      campoCompetencia("analisecrit-tomar-decisoes", "Tomar decisões técnicas"),
+      campoCompetencia("analisecrit-prevenir-recorrencia", "Prevenir recorrência de erros"),
+    ],
+  },
+  {
+    id: "secao-14-relacionamento-cliente",
+    titulo: "Seção 14 — Relacionamento com o Cliente",
+    descricao: "Avalie seu domínio em:",
+    campos: [
+      campoCompetencia("relcliente-explicar-informacoes", "Explicar informações contábeis ao cliente"),
+      campoCompetencia("relcliente-traduzir-termos", "Traduzir termos técnicos para uma linguagem simples"),
+      campoCompetencia("relcliente-responder-duvidas", "Responder dúvidas técnicas"),
+      campoCompetencia("relcliente-identificar-necessidades", "Identificar necessidades do cliente"),
+      campoCompetencia("relcliente-apresentar-resultados", "Apresentar resultados contábeis"),
+      campoCompetencia(
+        "relcliente-orientar-documentos",
+        "Orientar o cliente sobre documentos e informações necessárias"
+      ),
+      campoCompetencia("relcliente-comunicar-inconsistencias", "Comunicar inconsistências de forma profissional"),
+      campoCompetencia("relcliente-identificar-oportunidades", "Identificar oportunidades de melhoria para o cliente"),
+      campoCompetencia("relcliente-participar-reunioes", "Participar de reuniões técnicas"),
+      campoCompetencia(
+        "relcliente-demonstrar-seguranca",
+        "Demonstrar segurança ao apresentar informações contábeis"
+      ),
+    ],
+  },
+  {
+    id: "secao-15-organizacao-gestao-rotinas",
+    titulo: "Seção 15 — Organização e Gestão das Rotinas",
+    descricao: "Avalie seu domínio em:",
+    campos: [
+      campoCompetencia("organizrotinas-atividades", "Organização das atividades"),
+      campoCompetencia("organizrotinas-prazos", "Cumprimento de prazos"),
+      campoCompetencia("organizrotinas-prioridades", "Gestão de prioridades"),
+      campoCompetencia("organizrotinas-pendencias", "Acompanhamento de pendências"),
+      campoCompetencia("organizrotinas-controle-tarefas", "Controle de tarefas"),
+      campoCompetencia("organizrotinas-documentos", "Organização de documentos"),
+      campoCompetencia("organizrotinas-procedimentos-internos", "Cumprimento de procedimentos internos"),
+      campoCompetencia("organizrotinas-checklists", "Utilização de checklists"),
+      campoCompetencia("organizrotinas-riscos-atraso", "Identificação antecipada de riscos de atraso"),
+      campoCompetencia("organizrotinas-periodos-fechamento", "Organização para períodos de fechamento"),
+    ],
+  },
+  {
+    id: "secao-16-nivel-autonomia",
+    titulo: "Seção 16 — Nível de Autonomia",
+    campos: [
+      {
+        id: "autonomia-avaliacao",
+        tipo: "radio",
+        label: "Como você avalia sua autonomia técnica atualmente?",
+        obrigatorio: true,
+        opcoes: [
+          "Preciso de acompanhamento constante.",
+          "Consigo executar atividades simples com orientação.",
+          "Executo a maioria das atividades da função com autonomia.",
+          "Resolvo situações complexas com pouca necessidade de suporte.",
+          "Sou referência técnica e consigo orientar outros profissionais.",
+        ],
+      },
+      {
+        id: "autonomia-atividades-acompanhamento",
+        tipo: "texto_longo",
+        label: "Em quais atividades você ainda sente necessidade de acompanhamento?",
+        obrigatorio: false,
+      },
+      {
+        id: "autonomia-dificuldades-tecnicas",
+        tipo: "texto_longo",
+        label: "Quais são suas principais dificuldades técnicas atualmente?",
+        obrigatorio: false,
+      },
+    ],
+  },
+  {
+    id: "secao-17-pontos-fortes",
+    titulo: "Seção 17 — Pontos Fortes",
+    campos: [
+      {
+        id: "pontos-fortes-competencias",
+        tipo: "texto_longo",
+        label: "Quais são as competências técnicas que você considera seus principais pontos fortes?",
+        obrigatorio: false,
+      },
+      {
+        id: "pontos-fortes-referencia-equipe",
+        tipo: "texto_longo",
+        label: "Em quais atividades você se considera referência dentro da equipe?",
+        obrigatorio: false,
+      },
+    ],
+  },
+  {
+    id: "secao-18-necessidades-desenvolvimento",
+    titulo: "Seção 18 — Necessidades de Desenvolvimento",
+    campos: [
+      {
+        id: "desenvolvimento-competencias-6-meses",
+        tipo: "checkbox",
+        label: "Quais competências técnicas você gostaria de desenvolver nos próximos 6 meses?",
+        obrigatorio: false,
+        opcoes: [
+          "Contabilidade geral",
+          "Conciliação",
+          "Fechamento contábil",
+          "Demonstrações contábeis",
+          "ECD",
+          "ECF",
+          "Tributação",
+          "Lucro Real",
+          "Lucro Presumido",
+          "Simples Nacional",
+          "Reforma Tributária",
+          "CPC/NBC",
+          "Excel",
+          "Sistemas contábeis",
+          "Análise de demonstrações",
+          "Contabilidade societária",
+          "Contabilidade gerencial",
+          "Atendimento ao cliente",
+          "Automação",
+          "Inteligência Artificial aplicada à contabilidade",
+          "Outro",
+        ],
+      },
+      {
+        id: "desenvolvimento-competencia-nao-contemplada",
+        tipo: "texto_longo",
+        label:
+          "Existe alguma competência técnica que você considera importante para sua função e que não foi contemplada neste formulário?",
+        obrigatorio: false,
+      },
+    ],
+  },
+  {
+    id: "secao-19-autoavaliacao-final",
+    titulo: "Seção 19 — Autoavaliação Final",
+    campos: [
+      {
+        id: "autoavaliacao-nivel-tecnico-geral",
+        tipo: "escala",
+        label: "De 1 a 5, como você avalia seu nível técnico geral em relação à sua função atual?",
+        obrigatorio: true,
+        opcoes: ["1", "2", "3", "4", "5"],
+        opcoesDescricoes: [
+          "Preciso desenvolver significativamente",
+          "Tenho conhecimentos básicos",
+          "Atendo às exigências da função",
+          "Tenho domínio avançado",
+          "Sou referência técnica",
+        ],
+      },
+      {
+        id: "autoavaliacao-preparado-responsabilidades",
+        tipo: "radio",
+        label: "Você se sente preparado tecnicamente para assumir responsabilidades maiores?",
+        obrigatorio: true,
+        opcoes: ["Sim", "Parcialmente", "Ainda não"],
+      },
+      {
+        id: "autoavaliacao-area-especializacao",
+        tipo: "texto_longo",
+        label: "Em qual área você gostaria de se especializar?",
+        obrigatorio: false,
+      },
+    ],
+  },
+  {
+    id: "secao-20-percepcao-desenvolvimento",
+    titulo: "Seção 20 — Percepção sobre Desenvolvimento",
+    campos: [
+      {
+        id: "percepcao-formato-desenvolvimento",
+        tipo: "radio",
+        label: "Qual formato de desenvolvimento você considera mais eficaz para você?",
+        obrigatorio: true,
+        opcoes: [
+          "Treinamento presencial",
+          "Treinamento online",
+          "Mentoria",
+          "Acompanhamento com profissional mais experiente",
+          "Estudos dirigidos",
+          "Cursos externos",
+          "Cases práticos",
+          "Rodas de discussão técnica",
+          "Outro",
+        ],
+      },
+      {
+        id: "percepcao-tema-prioridade-treinamento",
+        tipo: "texto_longo",
+        label: "Qual tema técnico deveria ser prioridade para o próximo treinamento da equipe?",
+        obrigatorio: false,
+      },
+    ],
+  },
+];

@@ -22,6 +22,9 @@ import {
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { EmptyState } from "@/components/empty-state";
+import { COLUNAS_COLABORADORES } from "@/components/gestao/colunas";
+import { PaginacaoTabela, usePaginacao } from "@/components/paginacao-tabela";
+import { coresResumo } from "@/lib/cores-status";
 import type { Colaborador } from "@/lib/types";
 
 export interface LinhaColaboradorResumo {
@@ -53,11 +56,13 @@ export function ColaboradoresLista({ linhas }: { linhas: LinhaColaboradorResumo[
     return passaBusca && passaDepartamento;
   });
 
+  const paginacao = usePaginacao(filtradas, `${busca}|${departamento}`);
+
   return (
     <div className="flex flex-col gap-4">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div className="relative w-full sm:max-w-xs">
-          <Search className="pointer-events-none absolute top-1/2 left-2.5 size-4 -translate-y-1/2 text-graphite" />
+          <Search className="pointer-events-none absolute top-1/2 left-2.5 size-4 -translate-y-1/2 text-muted-foreground" />
           <Input
             value={busca}
             onChange={(e) => setBusca(e.target.value)}
@@ -87,36 +92,36 @@ export function ColaboradoresLista({ linhas }: { linhas: LinhaColaboradorResumo[
           description="Ajuste a busca ou o filtro de departamento para ver resultados."
         />
       ) : (
-        <div className="overflow-hidden rounded-lg border border-black/8 bg-white">
+        <div className="overflow-hidden rounded-xl border border-border bg-card">
           <Table className="table-fixed">
             <TableHeader>
-              <TableRow className="border-black/8 hover:bg-transparent">
-                <TableHead className="w-[24%]">Colaborador</TableHead>
-                <TableHead className="w-[18%]">Email pessoal</TableHead>
-                <TableHead className="w-[15%]">Cargo</TableHead>
-                <TableHead className="w-[13%]">Departamento</TableHead>
-                <TableHead className="w-[30%]">Formulários</TableHead>
+              <TableRow className="border-border hover:bg-transparent">
+                {COLUNAS_COLABORADORES.map((c) => (
+                  <TableHead key={c.titulo} className={c.className}>
+                    {c.titulo}
+                  </TableHead>
+                ))}
               </TableRow>
             </TableHeader>
             <TableBody>
-              {filtradas.map(({ colaborador, totalAtribuidos, totalRespondidos, totalPendentes, totalBloqueados }) => (
-                <TableRow key={colaborador.id} className="border-black/8">
+              {paginacao.itensPagina.map(({ colaborador, totalAtribuidos, totalRespondidos, totalPendentes, totalBloqueados }) => (
+                <TableRow key={colaborador.id} className="border-border">
                   <TableCell>
                     <div className="flex min-w-0 items-center gap-3">
                       <Avatar className="size-8 shrink-0 rounded-lg after:rounded-lg">
-                        <AvatarFallback className="rounded-lg bg-blue text-[12px] text-white">
+                        <AvatarFallback className="rounded-lg bg-primary text-[12px] text-primary-foreground">
                           {colaborador.iniciais}
                         </AvatarFallback>
                       </Avatar>
                       <div className="flex min-w-0 flex-col">
                         <span
-                          className="truncate text-[14px] font-medium text-ink"
+                          className="truncate text-[14px] font-medium text-foreground"
                           title={colaborador.nome}
                         >
                           {colaborador.nome}
                         </span>
                         <span
-                          className="truncate text-[13px] text-graphite"
+                          className="truncate text-[13px] text-muted-foreground"
                           title={colaborador.email}
                         >
                           {colaborador.email}
@@ -124,46 +129,46 @@ export function ColaboradoresLista({ linhas }: { linhas: LinhaColaboradorResumo[
                       </div>
                     </div>
                   </TableCell>
-                  <TableCell className="text-[13px] text-graphite">
+                  <TableCell className="text-[13px] text-muted-foreground">
                     <span className="block truncate" title={colaborador.emailPessoal}>
                       {colaborador.emailPessoal ?? "—"}
                     </span>
                   </TableCell>
-                  <TableCell className="text-[14px] text-graphite">
+                  <TableCell className="text-[14px] text-muted-foreground">
                     <div className="flex min-w-0 flex-col">
                       <span className="truncate" title={colaborador.cargo}>
                         {colaborador.cargo}
                       </span>
                       <span
-                        className="truncate text-[13px] text-graphite"
+                        className="truncate text-[13px] text-muted-foreground"
                         title={colaborador.funcao}
                       >
                         {colaborador.funcao}
                       </span>
                     </div>
                   </TableCell>
-                  <TableCell className="text-[14px] text-graphite">
+                  <TableCell className="text-[14px] text-muted-foreground">
                     <span className="block truncate" title={colaborador.departamento}>
                       {colaborador.departamento}
                     </span>
                   </TableCell>
                   <TableCell>
                     <div className="flex flex-wrap items-center gap-1.5">
-                      <Badge variant="outline" className="border-blue/30 bg-blue/8 text-blue">
+                      <Badge variant="outline" className={coresResumo.respondidos.badge}>
                         {totalRespondidos} respondido{totalRespondidos === 1 ? "" : "s"}
                       </Badge>
                       {totalPendentes > 0 ? (
-                        <Badge variant="outline" className="border-coral/25 bg-coral/10 text-coral">
+                        <Badge variant="outline" className={coresResumo.pendentes.badge}>
                           {totalPendentes} pendente{totalPendentes === 1 ? "" : "s"}
                         </Badge>
                       ) : null}
                       {totalBloqueados > 0 ? (
-                        <Badge variant="outline" className="border-black/8 text-stone">
+                        <Badge variant="outline" className={coresResumo.bloqueados.badge}>
                           {totalBloqueados} bloqueado{totalBloqueados === 1 ? "" : "s"}
                         </Badge>
                       ) : null}
                       {totalAtribuidos === 0 ? (
-                        <span className="text-[13px] text-graphite">Nenhum atribuído</span>
+                        <span className="text-[13px] text-muted-foreground">Nenhum atribuído</span>
                       ) : null}
                     </div>
                   </TableCell>
@@ -173,6 +178,8 @@ export function ColaboradoresLista({ linhas }: { linhas: LinhaColaboradorResumo[
           </Table>
         </div>
       )}
+
+      <PaginacaoTabela {...paginacao} rotuloItens="colaboradores" />
     </div>
   );
 }

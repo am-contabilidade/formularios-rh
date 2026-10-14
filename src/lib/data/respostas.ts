@@ -1,4 +1,5 @@
 import "server-only";
+import { cache } from "react";
 import { supabaseAdmin } from "@/lib/supabase/admin-client";
 import type { RespostaCampo, RespostaFormulario } from "@/lib/types";
 
@@ -34,7 +35,7 @@ function mapResposta(row: RespostaRow): RespostaFormulario {
   };
 }
 
-export async function getRespostaByAtribuicao(
+async function getRespostaByAtribuicaoSemCache(
   formularioId: string,
   colaboradorId: string
 ): Promise<RespostaFormulario | undefined> {
@@ -49,7 +50,7 @@ export async function getRespostaByAtribuicao(
   return data ? mapResposta(data as unknown as RespostaRow) : undefined;
 }
 
-export async function getRespostasByFormulario(
+async function getRespostasByFormularioSemCache(
   formularioId: string
 ): Promise<RespostaFormulario[]> {
   const { data, error } = await supabaseAdmin()
@@ -59,3 +60,28 @@ export async function getRespostasByFormulario(
   if (error) throw new Error(`getRespostasByFormulario: ${error.message}`);
   return ((data ?? []) as unknown as RespostaRow[]).map(mapResposta);
 }
+
+export interface Respondente {
+  formularioId: string;
+  colaboradorId: string;
+  enviadoEm: string;
+}
+
+/** Quem enviou cada formulário (consulta leve, sem os campos das respostas). */
+async function getRespondentesSemCache(): Promise<Respondente[]> {
+  const { data, error } = await supabaseAdmin()
+    .from("formularios_respostas")
+    .select("formulario_id, colaborador_id, enviado_em")
+    .order("enviado_em", { ascending: false });
+  if (error) throw new Error(`getRespondentes: ${error.message}`);
+  return (data ?? []).map((r) => ({
+    formularioId: r.formulario_id as string,
+    colaboradorId: r.colaborador_id as string,
+    enviadoEm: r.enviado_em as string,
+  }));
+}
+
+// Deduplica leituras repetidas na mesma requisição.
+export const getRespostaByAtribuicao = cache(getRespostaByAtribuicaoSemCache);
+export const getRespostasByFormulario = cache(getRespostasByFormularioSemCache);
+export const getRespondentes = cache(getRespondentesSemCache);

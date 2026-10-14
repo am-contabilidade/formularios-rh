@@ -9,7 +9,7 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-sans);
   --font-mono: var(--font-geist-mono);
-  --font-heading: var(--font-sans);
+  --font-heading: var(--font-heading);
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -40,23 +40,27 @@
   --color-card-foreground: var(--card-foreground);
   --color-card: var(--card);
 
-  /* Notion palette utilities (bg-*, text-*, border-*) */
+  /* Tokens do sistema (ver DESIGN.md) */
+  --color-canvas: var(--canvas);
+  --color-brand: var(--brand);
+  --color-info: var(--info);
+  /* Rampa ordinal da escala 1–5 (gráficos de respostas) + N/A neutro. */
+  --color-escala-1: var(--escala-1);
+  --color-escala-2: var(--escala-2);
+  --color-escala-3: var(--escala-3);
+  --color-escala-4: var(--escala-4);
+  --color-escala-5: var(--escala-5);
+  --color-escala-na: var(--escala-na);
+
+  /* Paleta Notion — usada só pela tela de login (login-switch.tsx), que
+     mantém a identidade antiga. Não usar no resto do sistema. */
   --color-ink: var(--color-ink-black);
   --color-graphite: var(--color-graphite);
   --color-stone: var(--color-stone);
-  --color-slate: var(--color-slate);
   --color-paper: var(--color-paper-warmth);
   --color-mist: var(--color-mist);
   --color-blue: var(--color-notion-blue);
-  --color-sky-tint: var(--color-sky-tint);
-  --color-sky-wash: var(--color-sky-wash);
-  --color-signal-blue: var(--color-signal-blue);
-  --color-marigold: var(--color-marigold);
   --color-coral: var(--color-coral);
-  --color-saffron: var(--color-saffron);
-  --color-vermillion: var(--color-vermillion);
-  --color-mocha: var(--color-mocha);
-  --color-midnight: var(--color-midnight-ink);
 
   --radius-sm: calc(var(--radius) * 0.6);
   --radius-md: calc(var(--radius) * 0.8);
@@ -68,28 +72,65 @@
 }
 
 :root {
-  /* Notion design tokens — see DESIGN.md */
+  /* Paleta Notion crua — referenciada diretamente pelo CSS do login. */
   --color-notion-blue: #0075de;
   --color-paper-warmth: #f6f5f4;
   --color-pure-white: #ffffff;
   --color-ink-black: #000000;
-  --color-charcoal: #111111;
   --color-stone: #757575;
   --color-graphite: #615d59;
-  --color-slate: #696969;
-  --color-sky-tint: #e6f3fe;
-  --color-marigold: #ffb110;
   --color-coral: #f64932;
-  --color-saffron: #e89d01;
-  --color-vermillion: #e32d14;
-  --color-mocha: #b18164;
-  --color-signal-blue: #097fe8;
-  --color-sky-wash: #62aef0;
   --color-midnight-ink: #02093a;
-  /* Practical UI-utility gray for track fills / connector lines — not part of
-     the marketing palette table, derived to sit between paper and stone. */
   --color-mist: #e8e6e2;
 
+  /* Paleta do sistema — DESIGN.md, "Customização: Paleta". */
+  --canvas: #eef2f7;
+  --brand: #2563eb;
+  --info: #2563eb;
+  --background: #ffffff;
+  --foreground: #1c2434;
+  --card: #ffffff;
+  --card-foreground: #1c2434;
+  --popover: #ffffff;
+  --popover-foreground: #1c2434;
+  --primary: #2563eb;
+  --primary-foreground: #ffffff;
+  --secondary: #eaf0fb;
+  --secondary-foreground: #1d4ed8;
+  --muted: #f1f4f9;
+  --muted-foreground: #5b6577;
+  --accent: #eaf0fb;
+  --accent-foreground: #1c2434;
+  --destructive: #dc2626;
+  --border: #e3e8ef;
+  --input: #d5dce6;
+  --ring: #2563eb;
+  --chart-1: #2563eb;
+  --chart-2: #10b981;
+  --chart-3: #f59e0b;
+  --chart-4: #8b5cf6;
+  --chart-5: #94a3b8;
+  --radius: 0.75rem;
+  --sidebar: #0f2a5c;
+  --sidebar-foreground: #e6ecf7;
+  --sidebar-primary: #2563eb;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #17366f;
+  --sidebar-accent-foreground: #ffffff;
+  --sidebar-border: rgb(255 255 255 / 8%);
+  --sidebar-ring: #2563eb;
+  /* Azul sequencial (passos 250→650, validado como rampa ordinal). */
+  --escala-1: #86b6ef;
+  --escala-2: #5598e7;
+  --escala-3: #2a78d6;
+  --escala-4: #1c5cab;
+  --escala-5: #104281;
+  --escala-na: #cbd5e1;
+}
+
+/* A tela de login ficou de fora da nova paleta: dentro dela os tokens
+   semânticos voltam aos valores Notion de antes. */
+.au-root {
   --background: var(--color-paper-warmth);
   --foreground: var(--color-ink-black);
   --card: var(--color-pure-white);
@@ -98,64 +139,61 @@
   --popover-foreground: var(--color-ink-black);
   --primary: var(--color-notion-blue);
   --primary-foreground: var(--color-pure-white);
-  --secondary: var(--color-sky-tint);
+  --secondary: #e6f3fe;
   --secondary-foreground: var(--color-notion-blue);
   --muted: var(--color-paper-warmth);
   --muted-foreground: var(--color-graphite);
-  --accent: var(--color-sky-tint);
+  --accent: #e6f3fe;
   --accent-foreground: var(--color-notion-blue);
   --destructive: var(--color-coral);
   --border: rgb(0 0 0 / 8%);
   --input: rgb(0 0 0 / 12%);
   --ring: var(--color-notion-blue);
-  --chart-1: var(--color-coral);
-  --chart-2: var(--color-marigold);
-  --chart-3: var(--color-signal-blue);
-  --chart-4: var(--color-mocha);
-  --chart-5: var(--color-stone);
-  --radius: 0.75rem;
-  --sidebar: var(--color-pure-white);
-  --sidebar-foreground: var(--color-graphite);
-  --sidebar-primary: var(--color-notion-blue);
-  --sidebar-primary-foreground: var(--color-pure-white);
-  --sidebar-accent: var(--color-sky-tint);
-  --sidebar-accent-foreground: var(--color-notion-blue);
-  --sidebar-border: rgb(0 0 0 / 8%);
-  --sidebar-ring: var(--color-notion-blue);
+  --font-heading: var(--font-sans);
 }
 
 .dark {
-  --background: #191817;
-  --foreground: var(--color-pure-white);
-  --card: #232221;
-  --card-foreground: var(--color-pure-white);
-  --popover: #232221;
-  --popover-foreground: var(--color-pure-white);
-  --primary: var(--color-notion-blue);
-  --primary-foreground: var(--color-pure-white);
-  --secondary: #2d2b29;
-  --secondary-foreground: var(--color-sky-wash);
-  --muted: #2d2b29;
-  --muted-foreground: #a8a29b;
-  --accent: #2d2b29;
-  --accent-foreground: var(--color-sky-wash);
-  --destructive: var(--color-coral);
+  --canvas: #0b1220;
+  --brand: #3b82f6;
+  --info: #3b82f6;
+  --background: #111a2b;
+  --foreground: #e6ecf7;
+  --card: #111a2b;
+  --card-foreground: #e6ecf7;
+  --popover: #111a2b;
+  --popover-foreground: #e6ecf7;
+  --primary: #3b82f6;
+  --primary-foreground: #ffffff;
+  --secondary: #1a2740;
+  --secondary-foreground: #93b4f5;
+  --muted: #1a2740;
+  --muted-foreground: #9aa6ba;
+  --accent: #1a2740;
+  --accent-foreground: #e6ecf7;
+  --destructive: #f87171;
   --border: rgb(255 255 255 / 10%);
   --input: rgb(255 255 255 / 14%);
-  --ring: var(--color-notion-blue);
-  --chart-1: var(--color-coral);
-  --chart-2: var(--color-marigold);
-  --chart-3: var(--color-sky-wash);
-  --chart-4: var(--color-mocha);
-  --chart-5: #a8a29b;
-  --sidebar: #191817;
-  --sidebar-foreground: #d4d0cb;
-  --sidebar-primary: var(--color-notion-blue);
-  --sidebar-primary-foreground: var(--color-pure-white);
-  --sidebar-accent: #2d2b29;
-  --sidebar-accent-foreground: var(--color-sky-wash);
-  --sidebar-border: rgb(255 255 255 / 10%);
-  --sidebar-ring: var(--color-notion-blue);
+  --ring: #3b82f6;
+  --chart-1: #3b82f6;
+  --chart-2: #34d399;
+  --chart-3: #fbbf24;
+  --chart-4: #a78bfa;
+  --chart-5: #64748b;
+  --sidebar: #0a1d42;
+  --sidebar-foreground: #e6ecf7;
+  --sidebar-primary: #3b82f6;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #17366f;
+  --sidebar-accent-foreground: #ffffff;
+  --sidebar-border: rgb(255 255 255 / 8%);
+  --sidebar-ring: #3b82f6;
+  /* No escuro a nota mais alta é a mais clara (mais destaque sobre o fundo). */
+  --escala-1: #184f95;
+  --escala-2: #256abf;
+  --escala-3: #3987e5;
+  --escala-4: #6da7ec;
+  --escala-5: #9ec5f4;
+  --escala-na: #475569;
 }
 
 @layer base {
@@ -170,25 +208,12 @@
   }
 }
 
-/* Wash de fundo dos portais (gestão/colaborador): mesma dupla de cores do
-   gradiente da tela de login (notion-blue -> midnight-ink), só que como um
-   brilho bem sutil nos cantos em vez de um gradiente cheio — para não
-   comprometer a leitura de texto/tabelas no dia a dia do painel. */
-@utility bg-app-wash {
-  background-color: var(--color-paper-warmth);
-  background-image:
-    radial-gradient(circle 640px at 0% 0%, color-mix(in oklab, var(--color-notion-blue) 9%, transparent) 0%, transparent 70%),
-    radial-gradient(circle 720px at 100% 0%, color-mix(in oklab, var(--color-midnight-ink) 6%, transparent) 0%, transparent 65%);
-  background-attachment: fixed;
-}
-
-/* Elevação suave para os cards "destaque" dos dashboards (stat cards, cards
-   de formulário, widgets de gráfico) — o resto do sistema segue flat/hairline
-   (ver DESIGN.md), essa sombra é uma exceção deliberada só para esses widgets
-   que precisam se destacar sobre o bg-app-wash. */
+/* Elevação mínima para cards de destaque (stat cards, cards de formulário,
+   widgets de gráfico). O sistema é flat — borda + superfície branca sobre o
+   canvas — então a sombra fica bem discreta, tingida do marinho do menu. */
 @utility shadow-elevated {
-  box-shadow: 0 1px 2px rgba(2, 9, 58, 0.04), 0 12px 28px -16px rgba(2, 9, 58, 0.18);
+  box-shadow: 0 1px 2px rgb(15 42 92 / 4%), 0 4px 12px -6px rgb(15 42 92 / 10%);
 }
 @utility shadow-elevated-lg {
-  box-shadow: 0 2px 4px rgba(2, 9, 58, 0.06), 0 20px 36px -16px rgba(2, 9, 58, 0.26);
+  box-shadow: 0 2px 4px rgb(15 42 92 / 5%), 0 12px 24px -12px rgb(15 42 92 / 18%);
 }

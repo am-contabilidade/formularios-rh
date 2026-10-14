@@ -1,33 +1,117 @@
+import { Suspense } from "react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowLeft, ClipboardCheck, Clock3, ListChecks, Lock, Users } from "lucide-react";
-import { StatCard } from "@/components/stat-card";
+import { ArrowLeft, ChartColumn, ListChecks } from "lucide-react";
+import { PageHeader } from "@/components/page-header";
+import { iconesNavegacao } from "@/components/icones-navegacao";
+import { PageHeaderSkeleton, PainelSkeleton, FiltrosSkeleton, TabelaSkeleton } from "@/components/skeletons";
 import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
 import {
   ColaboradoresTabela,
   type LinhaColaborador,
 } from "@/components/gestao/colaboradores-tabela";
+import { COLUNAS_COLABORADORES_FORMULARIO } from "@/components/gestao/colunas";
+import { ResumoFormularioCard } from "@/components/gestao/resumo-formulario-card";
+import { VincularColaboradorDialog } from "@/components/gestao/vincular-colaborador-dialog";
 import {
   getAtribuicoesByFormulario,
   getColaboradorById,
+  getColaboradores,
   getFormularioById,
   getResumoFormulario,
 } from "@/lib/data";
 
-export default async function GestaoFormularioDetalhePage({
-  params,
-}: {
-  params: Promise<{ formularioId: string }>;
-}) {
+type Params = Promise<{ formularioId: string }>;
+
+export default function GestaoFormularioDetalhePage({ params }: { params: Params }) {
+  return (
+    <div className="flex flex-col gap-8">
+      <div className="flex flex-col gap-4">
+        <Link
+          href="/gestao/formularios"
+          className="inline-flex w-fit items-center gap-1.5 text-[14px] text-muted-foreground hover:text-foreground"
+        >
+          <ArrowLeft className="size-4" />
+          Formulários
+        </Link>
+        <Suspense fallback={<PageHeaderSkeleton icon={iconesNavegacao.formularios} comAcoes />}>
+          <Cabecalho params={params} />
+        </Suspense>
+      </div>
+
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-[320px_1fr] lg:items-start">
+        <Suspense fallback={<PainelSkeleton titulo="Resumo" />}>
+          <Resumo params={params} />
+        </Suspense>
+        <Suspense
+          fallback={
+            <div className="flex flex-col gap-5 rounded-xl border border-border bg-card p-6">
+              <div className="flex items-center justify-between gap-3">
+                <span className="text-[16px] font-semibold text-foreground">Colaboradores</span>
+                <Skeleton className="h-8 w-40 rounded-full" />
+              </div>
+              <div className="border-t border-border pt-5">
+                <FiltrosSkeleton />
+              </div>
+              <TabelaSkeleton colunas={COLUNAS_COLABORADORES_FORMULARIO} linhas={5} />
+            </div>
+          }
+        >
+          <Colaboradores params={params} />
+        </Suspense>
+      </div>
+    </div>
+  );
+}
+
+async function Cabecalho({ params }: { params: Params }) {
   const { formularioId } = await params;
   const formulario = await getFormularioById(formularioId);
+  if (!formulario) notFound();
+
+  return (
+    <PageHeader
+      eyebrow={formulario.categoria}
+      title={formulario.titulo}
+      description={formulario.descricao}
+      icon={iconesNavegacao.formularios}
+      actions={
+        <>
+          <Button
+            variant="outline"
+            render={<Link href={`/gestao/formularios/${formulario.id}/perguntas`} />}
+            nativeButton={false}
+          >
+            <ListChecks />
+            Perguntas
+          </Button>
+          <Button
+            render={<Link href={`/gestao/formularios/${formulario.id}/respostas`} />}
+            nativeButton={false}
+          >
+            <ChartColumn />
+            Ver respostas
+          </Button>
+        </>
+      }
+    />
+  );
+}
+
+async function Resumo({ params }: { params: Params }) {
+  const { formularioId } = await params;
   const resumo = await getResumoFormulario(formularioId);
+  if (!resumo) return null;
+  return <ResumoFormularioCard resumo={resumo} />;
+}
 
-  if (!formulario || !resumo) {
-    notFound();
-  }
-
-  const atribuicoesFormulario = await getAtribuicoesByFormulario(formularioId);
+async function Colaboradores({ params }: { params: Params }) {
+  const { formularioId } = await params;
+  const [atribuicoesFormulario, todosColaboradores] = await Promise.all([
+    getAtribuicoesByFormulario(formularioId),
+    getColaboradores(),
+  ]);
   const linhas: LinhaColaborador[] = (
     await Promise.all(
       atribuicoesFormulario.map(async (atribuicao) => {
@@ -37,53 +121,19 @@ export default async function GestaoFormularioDetalhePage({
     )
   ).filter((linha): linha is LinhaColaborador => !!linha);
 
+  const jaVinculados = new Set(atribuicoesFormulario.map((a) => a.colaboradorId));
+  const colaboradoresDisponiveis = todosColaboradores.filter((c) => !jaVinculados.has(c.id));
+
   return (
-    <div className="flex flex-col gap-8">
-      <div className="flex flex-col gap-4">
-        <Link
-          href="/gestao/formularios"
-          className="inline-flex w-fit items-center gap-1.5 text-[14px] text-graphite hover:text-ink"
-        >
-          <ArrowLeft className="size-4" />
-          Formulários
-        </Link>
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-          <div className="flex flex-col gap-2">
-            <span className="text-[12px] font-medium tracking-[0.3px] text-graphite uppercase">
-              {formulario.categoria}
-            </span>
-            <h1 className="text-[28px] leading-[1.2] font-semibold text-ink">
-              {formulario.titulo}
-            </h1>
-            <p className="max-w-2xl text-[16px] text-graphite">{formulario.descricao}</p>
-          </div>
-          <Button
-            variant="outline"
-            render={<Link href={`/gestao/formularios/${formulario.id}/perguntas`} />}
-            nativeButton={false}
-          >
-            <ListChecks />
-            Perguntas do formulário
-          </Button>
-        </div>
-      </div>
-
-      <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
-        <StatCard label="Atribuídos" value={resumo.totalAtribuidos} icon={Users} />
-        <StatCard
-          label="Respondidos"
-          value={resumo.totalRespondidos}
-          icon={ClipboardCheck}
-          accent
+    <ColaboradoresTabela
+      linhas={linhas}
+      formularioId={formularioId}
+      headerAction={
+        <VincularColaboradorDialog
+          formularioId={formularioId}
+          colaboradoresDisponiveis={colaboradoresDisponiveis}
         />
-        <StatCard label="Pendentes" value={resumo.totalPendentes} icon={Clock3} />
-        <StatCard label="Bloqueados" value={resumo.totalBloqueados} icon={Lock} />
-      </div>
-
-      <div className="flex flex-col gap-4">
-        <h2 className="text-[20px] font-semibold text-ink">Colaboradores</h2>
-        <ColaboradoresTabela linhas={linhas} formularioId={formulario.id} />
-      </div>
-    </div>
+      }
+    />
   );
 }

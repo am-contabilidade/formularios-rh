@@ -17,10 +17,10 @@ export function GestaoFormularioCard({ resumo }: { resumo: ResumoFormulario }) {
   const restantes = colaboradores.length - visiveis.length;
 
   return (
-    <Card className="group rounded-2xl border-black/6 py-0 shadow-elevated transition-all duration-200 hover:-translate-y-0.5 hover:shadow-elevated-lg">
+    <Card className="group rounded-xl border-border py-0 shadow-elevated transition-all duration-200 hover:-translate-y-0.5 hover:shadow-elevated-lg">
       <CardContent className="flex h-full flex-col gap-5 p-6">
         <div className="flex items-start justify-between gap-3">
-          <span className="text-[12px] font-medium tracking-[0.3px] text-graphite uppercase">
+          <span className="text-[12px] font-medium tracking-[0.3px] text-muted-foreground uppercase">
             {formulario.categoria}
           </span>
           {visiveis.length > 0 ? (
@@ -29,8 +29,8 @@ export function GestaoFormularioCard({ resumo }: { resumo: ResumoFormulario }) {
                 <Tooltip key={colaborador.id}>
                   <TooltipTrigger
                     render={
-                      <Avatar className="size-7 rounded-full ring-2 ring-white">
-                        <AvatarFallback className="bg-blue text-[11px] text-white">
+                      <Avatar className="size-7 rounded-full ring-2 ring-card">
+                        <AvatarFallback className="bg-primary text-[11px] text-primary-foreground">
                           {colaborador.iniciais}
                         </AvatarFallback>
                       </Avatar>
@@ -40,7 +40,7 @@ export function GestaoFormularioCard({ resumo }: { resumo: ResumoFormulario }) {
                 </Tooltip>
               ))}
               {restantes > 0 ? (
-                <AvatarGroupCount className="size-7 text-[11px] ring-2 ring-white">
+                <AvatarGroupCount className="size-7 text-[11px] ring-2 ring-card">
                   +{restantes}
                 </AvatarGroupCount>
               ) : null}
@@ -49,37 +49,37 @@ export function GestaoFormularioCard({ resumo }: { resumo: ResumoFormulario }) {
         </div>
 
         <div className="flex flex-1 flex-col gap-1.5">
-          <h3 className="text-[20px] leading-[1.3] font-semibold text-ink">
+          <h3 className="font-heading text-[20px] leading-[1.3] font-semibold text-foreground">
             {formulario.titulo}
           </h3>
-          <p className="line-clamp-2 text-[14px] leading-[1.5] text-graphite">
+          <p className="line-clamp-2 text-[14px] leading-[1.5] text-muted-foreground">
             {formulario.descricao}
           </p>
         </div>
 
-        <div className="grid grid-cols-3 gap-3 border-t border-black/8 pt-4">
+        <div className="grid grid-cols-3 gap-3 border-t border-border pt-4">
           <div className="flex flex-col gap-0.5">
-            <span className="text-[20px] font-semibold text-ink">{totalRespondidos}</span>
-            <span className="text-[12px] text-graphite">Respondidos</span>
+            <span className="text-[20px] font-semibold text-foreground">{totalRespondidos}</span>
+            <span className="text-[12px] text-muted-foreground">Respondidos</span>
           </div>
           <div className="flex flex-col gap-0.5">
-            <span className="text-[20px] font-semibold text-ink">{totalPendentes}</span>
-            <span className="text-[12px] text-graphite">Pendentes</span>
+            <span className="text-[20px] font-semibold text-foreground">{totalPendentes}</span>
+            <span className="text-[12px] text-muted-foreground">Pendentes</span>
           </div>
           <div className="flex flex-col gap-0.5">
-            <span className="text-[20px] font-semibold text-ink">{totalBloqueados}</span>
-            <span className="text-[12px] text-graphite">Bloqueados</span>
+            <span className="text-[20px] font-semibold text-foreground">{totalBloqueados}</span>
+            <span className="text-[12px] text-muted-foreground">Bloqueados</span>
           </div>
         </div>
 
         <div className="flex items-center gap-2">
-          <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-paper">
+          <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-muted">
             <div
-              className="h-full rounded-full bg-blue"
+              className="h-full rounded-full bg-primary"
               style={{ width: `${percentualConcluido}%` }}
             />
           </div>
-          <span className="text-[12px] font-medium text-graphite">{percentualConcluido}%</span>
+          <span className="text-[12px] font-medium text-muted-foreground">{percentualConcluido}%</span>
         </div>
 
         <Button

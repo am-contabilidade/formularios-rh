@@ -2,13 +2,7 @@ import { CircleDashed, Clock, Lock, CheckCheck } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { StatusAcesso } from "@/lib/types";
 import { statusAcessoLabel } from "@/lib/labels";
-
-const statusStyles: Record<StatusAcesso, string> = {
-  aguardando: "border-coral/25 bg-coral/10 text-coral",
-  em_andamento: "border-marigold/50 bg-marigold/25 text-black",
-  respondido: "border-blue bg-blue text-white",
-  bloqueado: "border-black/8 bg-muted text-stone",
-};
+import { coresStatusAcesso } from "@/lib/cores-status";
 
 const statusIcons: Record<StatusAcesso, React.ComponentType<{ className?: string }>> = {
   aguardando: Clock,
@@ -28,8 +22,8 @@ export function StatusBadge({
   return (
     <span
       className={cn(
-        "inline-flex w-fit shrink-0 items-center gap-1.5 rounded-full border px-2.5 py-1 text-[12px] font-medium tracking-[0.3px] uppercase whitespace-nowrap",
-        statusStyles[status],
+        "inline-flex w-fit shrink-0 items-center gap-1.5 rounded-full border px-2.5 py-0.5 text-[12px] font-semibold whitespace-nowrap",
+        coresStatusAcesso[status].badge,
         className
       )}
     >

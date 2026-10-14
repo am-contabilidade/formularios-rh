@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { useRouter } from "next/navigation";
-import { ClipboardList, FileText, LayoutDashboard, ShieldCheck, Users } from "lucide-react";
+import { ClipboardList, FileSpreadsheet, FileText, LayoutDashboard, ShieldCheck, Users } from "lucide-react";
 
 import {
   CommandDialog,
@@ -13,19 +13,59 @@ import {
   CommandList,
   CommandSeparator,
 } from "@/components/ui/command";
+import { Skeleton } from "@/components/ui/skeleton";
 import type { Atribuicao, Formulario, PerfilUsuario } from "@/lib/types";
-import type { AppShellData } from "@/components/app-shell-data";
+
+/** Lista de formulários do palette: resolve as promises só quando ele abre. */
+function GrupoFormularios({
+  perfil,
+  formularios: formulariosPromise,
+  atribuicoesColaborador: atribuicoesPromise,
+  onAbrir,
+}: {
+  perfil: PerfilUsuario;
+  formularios: Promise<Formulario[]>;
+  atribuicoesColaborador: Promise<Atribuicao[]>;
+  onAbrir: (href: string) => void;
+}) {
+  const formularios = React.use(formulariosPromise);
+  const atribuicoesColaborador = React.use(atribuicoesPromise);
+  const formularioItems =
+    perfil === "colaborador"
+      ? atribuicoesColaborador
+          .map((a) => formularios.find((f) => f.id === a.formularioId))
+          .filter((f): f is NonNullable<typeof f> => !!f)
+      : formularios;
+
+  return (
+    <CommandGroup heading="Formulários">
+      {formularioItems.map((formulario) => (
+        <CommandItem
+          key={formulario.id}
+          onSelect={() =>
+            onAbrir(
+              perfil === "colaborador"
+                ? `/colaborador/formularios/${formulario.id}`
+                : `/gestao/formularios/${formulario.id}`
+            )
+          }
+        >
+          <FileText />
+          {formulario.titulo}
+        </CommandItem>
+      ))}
+    </CommandGroup>
+  );
+}
 
 export function CommandPalette({
   perfil,
-  colaboradorAtual,
   formularios,
   atribuicoesColaborador,
 }: {
   perfil: PerfilUsuario;
-  colaboradorAtual: AppShellData["colaboradorAtual"];
-  formularios: Formulario[];
-  atribuicoesColaborador: Atribuicao[];
+  formularios: Promise<Formulario[]>;
+  atribuicoesColaborador: Promise<Atribuicao[]>;
 }) {
   const [open, setOpen] = React.useState(false);
   const router = useRouter();
@@ -57,14 +97,8 @@ export function CommandPalette({
           { label: "Formulários", href: "/gestao/formularios", icon: ClipboardList },
           { label: "Colaboradores", href: "/gestao/colaboradores", icon: Users },
           { label: "Gestão de acessos", href: "/gestao/acessos", icon: ShieldCheck },
+          { label: "Relatórios", href: "/gestao/relatorios", icon: FileSpreadsheet },
         ];
-
-  const formularioItems =
-    perfil === "colaborador"
-      ? atribuicoesColaborador
-          .map((a) => formularios.find((f) => f.id === a.formularioId))
-          .filter((f): f is NonNullable<typeof f> => !!f)
-      : formularios;
 
   return (
     <CommandDialog
@@ -85,25 +119,21 @@ export function CommandPalette({
           ))}
         </CommandGroup>
         <CommandSeparator />
-        <CommandGroup heading="Formulários">
-          {formularioItems.map((formulario) => (
-            <CommandItem
-              key={formulario.id}
-              onSelect={() =>
-                run(() =>
-                  router.push(
-                    perfil === "colaborador"
-                      ? `/colaborador/formularios/${formulario.id}`
-                      : `/gestao/formularios/${formulario.id}`
-                  )
-                )
-              }
-            >
-              <FileText />
-              {formulario.titulo}
-            </CommandItem>
-          ))}
-        </CommandGroup>
+        <React.Suspense
+          fallback={
+            <div className="flex flex-col gap-2 p-2">
+              <Skeleton className="h-4 w-2/3" />
+              <Skeleton className="h-4 w-1/2" />
+            </div>
+          }
+        >
+          <GrupoFormularios
+            perfil={perfil}
+            formularios={formularios}
+            atribuicoesColaborador={atribuicoesColaborador}
+            onAbrir={(href) => run(() => router.push(href))}
+          />
+        </React.Suspense>
       </CommandList>
     </CommandDialog>
   );

@@ -6,14 +6,7 @@ import { EmptyState } from "@/components/empty-state";
 import { ColaboradorFormCard } from "@/components/colaborador/form-card";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import type { Atribuicao, Formulario, StatusAcesso } from "@/lib/types";
-
-const filtros: { value: StatusAcesso | "todos"; label: string }[] = [
-  { value: "todos", label: "Todos" },
-  { value: "aguardando", label: "Aguardando" },
-  { value: "em_andamento", label: "Em andamento" },
-  { value: "respondido", label: "Respondidos" },
-  { value: "bloqueado", label: "Bloqueados" },
-];
+import { filtrosStatusAcesso } from "@/lib/labels";
 
 export interface ItemFormularioColaborador {
   atribuicao: Atribuicao;
@@ -31,7 +24,7 @@ export function ColaboradorFormulariosLista({ itens }: { itens: ItemFormularioCo
     <>
       <Tabs value={filtro} onValueChange={(value) => setFiltro(value as StatusAcesso | "todos")}>
         <TabsList>
-          {filtros.map((f) => (
+          {filtrosStatusAcesso.map((f) => (
             <TabsTrigger key={f.value} value={f.value}>
               {f.label}
             </TabsTrigger>

@@ -4,7 +4,8 @@
  * usuário — ainda em memória, sem persistência no banco. Conforme as seções
  * forem fechadas, migram para `formularios_secoes`/`formularios_campos`.
  */
-import type { CampoFormulario, SecaoFormulario } from "@/lib/types";
+import type { SecaoFormulario } from "@/lib/types";
+import { campoCompetencia } from "@/lib/perguntas/escala-competencia";
 
 /**
  * Tela final exibida depois da última seção, antes de encerrar o
@@ -13,31 +14,6 @@ import type { CampoFormulario, SecaoFormulario } from "@/lib/types";
  */
 export const mensagemFinalMapeamentoCompetenciasFiscal =
   "Obrigado por participar do Mapeamento de Competências — Fiscal! Suas respostas ajudam a equipe de RH a identificar pontos fortes, estruturar treinamentos e montar planos de desenvolvimento individuais para a equipe.";
-
-/** Legenda da escala usada nas seções seguintes (grades de competência). */
-export const escalaAvaliacaoLegenda = [
-  { nota: "1", nivel: "Não domino", significado: "Não possuo conhecimento suficiente para executar" },
-  { nota: "2", nivel: "Básico", significado: "Conheço o conceito, mas preciso de orientação" },
-  { nota: "3", nivel: "Intermediário", significado: "Executo atividades rotineiras com autonomia" },
-  { nota: "4", nivel: "Avançado", significado: "Executo com autonomia e soluciono problemas" },
-  { nota: "5", nivel: "Referência", significado: "Domino situações complexas e consigo orientar outros" },
-  { nota: "N/A", nivel: "Não se aplica", significado: "Não faz parte das minhas atividades" },
-] as const;
-
-const escalaCompetenciaOpcoes = escalaAvaliacaoLegenda.map((item) => `${item.nota} — ${item.nivel}`);
-const escalaCompetenciaDescricoes = escalaAvaliacaoLegenda.map((item) => item.significado);
-
-/** Uma linha de "grade de múltipla escolha" do docx = um campo de escala. */
-function campoCompetencia(id: string, label: string): CampoFormulario {
-  return {
-    id,
-    tipo: "escala",
-    label,
-    obrigatorio: true,
-    opcoes: escalaCompetenciaOpcoes,
-    opcoesDescricoes: escalaCompetenciaDescricoes,
-  };
-}
 
 export const secoesMapeamentoCompetenciasFiscal: SecaoFormulario[] = [
   {

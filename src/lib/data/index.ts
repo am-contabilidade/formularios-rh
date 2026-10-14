@@ -12,8 +12,20 @@ export {
   getAtribuicoesByColaborador,
   getAtribuicoesByFormulario,
   getAtribuicao,
+  createAtribuicoes,
 } from "@/lib/data/atribuicoes";
-export { getRespostaByAtribuicao, getRespostasByFormulario } from "@/lib/data/respostas";
+export {
+  getRespostaByAtribuicao,
+  getRespostasByFormulario,
+  getRespondentes,
+  type Respondente,
+} from "@/lib/data/respostas";
+export {
+  getRascunho,
+  salvarRascunho,
+  enviarResposta,
+  type ResultadoSalvarRascunho,
+} from "@/lib/data/rascunhos";
 export {
   getResumoFormulario,
   getResumosFormularios,

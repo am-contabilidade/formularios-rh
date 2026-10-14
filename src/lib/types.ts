@@ -107,3 +107,15 @@ export interface RespostaFormulario {
   tempoGastoMinutos: number;
   campos: RespostaCampo[];
 }
+
+/** Respostas em preenchimento: id do campo -> valor. */
+export type RespostasMapa = Record<string, string | string[]>;
+
+/** Snapshot do preenchimento (tabela formularios_rascunhos). */
+export interface Rascunho {
+  respostas: RespostasMapa;
+  secaoAtual: number;
+  versao: number;
+  /** ISO timestamp do último salvamento. */
+  atualizadoEm: string;
+}

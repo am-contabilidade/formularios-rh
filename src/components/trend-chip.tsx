@@ -4,7 +4,7 @@ import { cn } from "@/lib/utils";
 export function TrendChip({ value, className }: { value: number; className?: string }) {
   if (value === 0) {
     return (
-      <span className={cn("text-[12px] font-medium text-stone", className)}>Estável</span>
+      <span className={cn("text-[12px] font-medium text-muted-foreground/80", className)}>Estável</span>
     );
   }
 
@@ -15,7 +15,7 @@ export function TrendChip({ value, className }: { value: number; className?: str
     <span
       className={cn(
         "inline-flex items-center gap-1 text-[12px] font-medium",
-        positivo ? "text-ink" : "text-coral",
+        positivo ? "text-foreground" : "text-destructive",
         className
       )}
     >

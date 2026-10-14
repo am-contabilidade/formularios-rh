@@ -1,4 +1,5 @@
 import "server-only";
+import { cache } from "react";
 import { supabaseAdmin } from "@/lib/supabase/admin-client";
 import type { Atribuicao, Colaborador, Formulario, RespostaFormulario } from "@/lib/types";
 import { getColaboradoresByIds } from "@/lib/data/colaboradores";
@@ -15,7 +16,7 @@ export interface ResumoFormulario {
   colaboradores: Colaborador[];
 }
 
-export async function getResumoFormulario(formularioId: string): Promise<ResumoFormulario | undefined> {
+async function getResumoFormularioSemCache(formularioId: string): Promise<ResumoFormulario | undefined> {
   const formulario = await getFormularioById(formularioId);
   if (!formulario) return undefined;
   const lista = await getAtribuicoesByFormulario(formularioId);
@@ -31,7 +32,7 @@ export async function getResumoFormulario(formularioId: string): Promise<ResumoF
   };
 }
 
-export async function getResumosFormularios(): Promise<ResumoFormulario[]> {
+async function getResumosFormulariosSemCache(): Promise<ResumoFormulario[]> {
   const formularios = await getFormularios();
   const resumos = await Promise.all(formularios.map((f) => getResumoFormulario(f.id)));
   return resumos.filter((r): r is ResumoFormulario => !!r);
@@ -44,7 +45,7 @@ export interface ResumoGestao {
   totalPendentes: number;
 }
 
-export async function getResumoGestao(): Promise<ResumoGestao> {
+async function getResumoGestaoSemCache(): Promise<ResumoGestao> {
   const admin = supabaseAdmin();
   const [colaboradores, formularios, respondidos, pendentes] = await Promise.all([
     admin.from("formularios_colaboradores_atual").select("id", { count: "exact", head: true }),
@@ -75,7 +76,7 @@ export interface ItemHistorico {
   resposta: RespostaFormulario;
 }
 
-export async function getHistoricoColaborador(colaboradorId: string): Promise<ItemHistorico[]> {
+async function getHistoricoColaboradorSemCache(colaboradorId: string): Promise<ItemHistorico[]> {
   const atribuicoes = (await getAtribuicoesByColaborador(colaboradorId)).filter(
     (a) => a.status === "respondido"
   );
@@ -92,9 +93,16 @@ export async function getHistoricoColaborador(colaboradorId: string): Promise<It
     .sort((a, b) => (a.resposta.enviadoEm < b.resposta.enviadoEm ? 1 : -1));
 }
 
-export async function getProximaPendencia(colaboradorId: string): Promise<Atribuicao | undefined> {
+async function getProximaPendenciaSemCache(colaboradorId: string): Promise<Atribuicao | undefined> {
   const atribuicoes = (await getAtribuicoesByColaborador(colaboradorId)).filter(
     (a) => (a.status === "aguardando" || a.status === "em_andamento") && a.prazo
   );
   return atribuicoes.sort((a, b) => (a.prazo! < b.prazo! ? -1 : 1))[0];
 }
+
+// Deduplica leituras repetidas na mesma requisição.
+export const getResumoFormulario = cache(getResumoFormularioSemCache);
+export const getResumosFormularios = cache(getResumosFormulariosSemCache);
+export const getResumoGestao = cache(getResumoGestaoSemCache);
+export const getHistoricoColaborador = cache(getHistoricoColaboradorSemCache);
+export const getProximaPendencia = cache(getProximaPendenciaSemCache);

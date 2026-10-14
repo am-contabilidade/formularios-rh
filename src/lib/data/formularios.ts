@@ -1,4 +1,5 @@
 import "server-only";
+import { cache } from "react";
 import { supabaseAdmin } from "@/lib/supabase/admin-client";
 import type { CampoFormulario, Formulario, SecaoFormulario, StatusFormulario, TipoCampo } from "@/lib/types";
 
@@ -88,7 +89,7 @@ function mapFormulario(row: FormularioRow): Formulario {
   };
 }
 
-export async function getFormularios(): Promise<Formulario[]> {
+async function getFormulariosSemCache(): Promise<Formulario[]> {
   const { data, error } = await supabaseAdmin()
     .from("formularios_formularios")
     .select(SELECT)
@@ -97,7 +98,7 @@ export async function getFormularios(): Promise<Formulario[]> {
   return ((data ?? []) as unknown as FormularioRow[]).map(mapFormulario);
 }
 
-export async function getFormularioById(id: string): Promise<Formulario | undefined> {
+async function getFormularioByIdSemCache(id: string): Promise<Formulario | undefined> {
   if (!id) return undefined;
   const { data, error } = await supabaseAdmin()
     .from("formularios_formularios")
@@ -107,3 +108,8 @@ export async function getFormularioById(id: string): Promise<Formulario | undefi
   if (error) throw new Error(`getFormularioById: ${error.message}`);
   return data ? mapFormulario(data as unknown as FormularioRow) : undefined;
 }
+
+// Deduplica leituras repetidas na mesma requisição (ex.: título e corpo da
+// página em <Suspense> separados).
+export const getFormularios = cache(getFormulariosSemCache);
+export const getFormularioById = cache(getFormularioByIdSemCache);

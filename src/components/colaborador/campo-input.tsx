@@ -34,12 +34,12 @@ export function CampoInput({
 
   return (
     <div className="flex flex-col gap-2">
-      <Label htmlFor={campo.id} className="text-[14px] font-semibold text-ink">
+      <Label htmlFor={campo.id} className="text-[14px] font-semibold text-foreground">
         {campo.label}
-        {campo.obrigatorio ? <span className="text-blue"> *</span> : null}
+        {campo.obrigatorio ? <span className="text-primary"> *</span> : null}
       </Label>
       {campo.descricao ? (
-        <p className="-mt-1 text-[13px] text-graphite">{campo.descricao}</p>
+        <p className="-mt-1 text-[13px] text-muted-foreground">{campo.descricao}</p>
       ) : null}
 
       {(campo.tipo === "texto" || campo.tipo === "numero") && (
@@ -89,7 +89,7 @@ export function CampoInput({
       {campo.tipo === "radio" && (
         <RadioGroup value={textoValor} onValueChange={(v) => onChange(v)} className="gap-2.5">
           {campo.opcoes?.map((opcao) => (
-            <label key={opcao} className="flex items-center gap-2.5 text-[14px] text-ink">
+            <label key={opcao} className="flex items-center gap-2.5 text-[14px] text-foreground">
               <RadioGroupItem value={opcao} />
               {opcao}
             </label>
@@ -107,9 +107,9 @@ export function CampoInput({
             const nota = notaOpcaoEscala(opcao);
             const significado = campo.opcoesDescricoes?.[index];
             const label = (
-              <label className="flex flex-col items-center gap-1.5 text-[13px] font-medium text-graphite">
+              <label className="flex flex-col items-center gap-1.5 text-[13px] font-medium text-muted-foreground">
                 <RadioGroupItem value={opcao} />
-                <span className="text-ink">{nota}</span>
+                <span className="text-foreground">{nota}</span>
               </label>
             );
             return significado ? (
@@ -129,7 +129,7 @@ export function CampoInput({
           {campo.opcoes?.map((opcao) => {
             const marcado = listaValor.includes(opcao);
             return (
-              <label key={opcao} className="flex items-center gap-2.5 text-[14px] text-ink">
+              <label key={opcao} className="flex items-center gap-2.5 text-[14px] text-foreground">
                 <Checkbox
                   checked={marcado}
                   onCheckedChange={(checked) => {

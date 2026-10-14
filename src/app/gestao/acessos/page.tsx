@@ -1,8 +1,35 @@
+import { Suspense } from "react";
 import { PageHeader } from "@/components/page-header";
+import { iconesNavegacao } from "@/components/icones-navegacao";
+import { FiltrosSkeleton, TabelaSkeleton } from "@/components/skeletons";
 import { AcessosTabela, type LinhaAcesso } from "@/components/gestao/acessos-tabela";
+import { COLUNAS_ACESSOS } from "@/components/gestao/colunas";
 import { getAtribuicoes, getColaboradorById, getFormularioById, getFormularios } from "@/lib/data";
 
-export default async function GestaoAcessosPage() {
+export default function GestaoAcessosPage() {
+  return (
+    <div className="flex flex-col gap-8">
+      <PageHeader
+        eyebrow="AM Automação"
+        title="Gestão de acessos"
+        icon={iconesNavegacao.acessos}
+        description="Libere ou bloqueie o acesso de cada colaborador aos formulários atribuídos."
+      />
+      <Suspense
+        fallback={
+          <div className="flex flex-col gap-4">
+            <FiltrosSkeleton selects={2} />
+            <TabelaSkeleton colunas={COLUNAS_ACESSOS} linhas={10} />
+          </div>
+        }
+      >
+        <ListaAcessos />
+      </Suspense>
+    </div>
+  );
+}
+
+async function ListaAcessos() {
   const [atribuicoes, formularios] = await Promise.all([getAtribuicoes(), getFormularios()]);
   const linhas: LinhaAcesso[] = (
     await Promise.all(
@@ -15,14 +42,5 @@ export default async function GestaoAcessosPage() {
     )
   ).filter((linha): linha is LinhaAcesso => !!linha);
 
-  return (
-    <div className="flex flex-col gap-8">
-      <PageHeader
-        eyebrow="AM Automação"
-        title="Gestão de acessos"
-        description="Libere ou bloqueie o acesso de cada colaborador aos formulários atribuídos."
-      />
-      <AcessosTabela linhasIniciais={linhas} formularios={formularios} />
-    </div>
-  );
+  return <AcessosTabela linhasIniciais={linhas} formularios={formularios} />;
 }

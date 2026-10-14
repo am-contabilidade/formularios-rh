@@ -1,4 +1,5 @@
 import "server-only";
+import { cache } from "react";
 import { supabaseAdmin } from "@/lib/supabase/admin-client";
 import type { Atribuicao, StatusAcesso } from "@/lib/types";
 
@@ -26,13 +27,13 @@ function mapAtribuicao(row: AtribuicaoRow): Atribuicao {
   };
 }
 
-export async function getAtribuicoes(): Promise<Atribuicao[]> {
+async function getAtribuicoesSemCache(): Promise<Atribuicao[]> {
   const { data, error } = await supabaseAdmin().from("formularios_atribuicoes").select(SELECT);
   if (error) throw new Error(`getAtribuicoes: ${error.message}`);
   return (data ?? []).map(mapAtribuicao);
 }
 
-export async function getAtribuicoesByColaborador(colaboradorId: string): Promise<Atribuicao[]> {
+async function getAtribuicoesByColaboradorSemCache(colaboradorId: string): Promise<Atribuicao[]> {
   if (!colaboradorId) return [];
   const { data, error } = await supabaseAdmin()
     .from("formularios_atribuicoes")
@@ -42,7 +43,7 @@ export async function getAtribuicoesByColaborador(colaboradorId: string): Promis
   return (data ?? []).map(mapAtribuicao);
 }
 
-export async function getAtribuicoesByFormulario(formularioId: string): Promise<Atribuicao[]> {
+async function getAtribuicoesByFormularioSemCache(formularioId: string): Promise<Atribuicao[]> {
   const { data, error } = await supabaseAdmin()
     .from("formularios_atribuicoes")
     .select(SELECT)
@@ -51,7 +52,23 @@ export async function getAtribuicoesByFormulario(formularioId: string): Promise<
   return (data ?? []).map(mapAtribuicao);
 }
 
-export async function getAtribuicao(
+export async function createAtribuicoes(
+  formularioId: string,
+  colaboradorIds: string[]
+): Promise<void> {
+  if (colaboradorIds.length === 0) return;
+  const rows = colaboradorIds.map((colaboradorId) => ({
+    formulario_id: formularioId,
+    colaborador_id: colaboradorId,
+    status: "aguardando",
+  }));
+  const { error } = await supabaseAdmin()
+    .from("formularios_atribuicoes")
+    .upsert(rows, { onConflict: "formulario_id,colaborador_id", ignoreDuplicates: true });
+  if (error) throw new Error(`createAtribuicoes: ${error.message}`);
+}
+
+async function getAtribuicaoSemCache(
   formularioId: string,
   colaboradorId: string
 ): Promise<Atribuicao | undefined> {
@@ -65,3 +82,10 @@ export async function getAtribuicao(
   if (error) throw new Error(`getAtribuicao: ${error.message}`);
   return data ? mapAtribuicao(data) : undefined;
 }
+
+// Deduplica leituras repetidas na mesma requisição (ex.: título e corpo da
+// página em <Suspense> separados).
+export const getAtribuicoes = cache(getAtribuicoesSemCache);
+export const getAtribuicoesByColaborador = cache(getAtribuicoesByColaboradorSemCache);
+export const getAtribuicoesByFormulario = cache(getAtribuicoesByFormularioSemCache);
+export const getAtribuicao = cache(getAtribuicaoSemCache);

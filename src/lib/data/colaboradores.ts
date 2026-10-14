@@ -1,4 +1,5 @@
 import "server-only";
+import { cache } from "react";
 import { supabaseAdmin } from "@/lib/supabase/admin-client";
 import type { Colaborador, PerfilUsuario } from "@/lib/types";
 
@@ -42,7 +43,7 @@ function mapColaborador(row: ColaboradorAtualRow): Colaborador {
 const SELECT =
   "id, nome, email, email_pessoal, cargo, departamento, data_admissao, perfil, icone_url, foto_url";
 
-export async function getColaboradores(): Promise<Colaborador[]> {
+async function getColaboradoresSemCache(): Promise<Colaborador[]> {
   const { data, error } = await supabaseAdmin()
     .from("formularios_colaboradores_atual")
     .select(SELECT)
@@ -51,7 +52,7 @@ export async function getColaboradores(): Promise<Colaborador[]> {
   return (data ?? []).map(mapColaborador);
 }
 
-export async function getColaboradorById(id: string): Promise<Colaborador | undefined> {
+async function getColaboradorByIdSemCache(id: string): Promise<Colaborador | undefined> {
   if (!id) return undefined;
   const { data, error } = await supabaseAdmin()
     .from("formularios_colaboradores_atual")
@@ -105,3 +106,8 @@ export async function getCredencialPorEmailPessoal(
     passwordHash: data.password_hash,
   };
 }
+
+// Deduplica leituras repetidas na mesma requisição (ex.: título e corpo da
+// página em <Suspense> separados).
+export const getColaboradores = cache(getColaboradoresSemCache);
+export const getColaboradorById = cache(getColaboradorByIdSemCache);

@@ -4,8 +4,8 @@ export function DonutProgress({
   value,
   size = 72,
   strokeWidth = 6,
-  color = "var(--color-notion-blue)",
-  trackColor = "var(--color-mist)",
+  color = "var(--primary)",
+  trackColor = "var(--muted)",
   label,
   showBadge = false,
   className,
@@ -62,7 +62,7 @@ export function DonutProgress({
 
       {showBadge && clamped > 0 ? (
         <div
-          className="absolute z-10 flex items-center gap-1 rounded-full bg-blue px-2 py-0.5 text-[10px] font-semibold whitespace-nowrap text-white shadow-elevated"
+          className="absolute z-10 flex items-center gap-1 rounded-full bg-primary px-2 py-0.5 text-[10px] font-semibold whitespace-nowrap text-primary-foreground shadow-elevated"
           style={{ left: badgeX, top: badgeY, transform: "translate(-50%, -50%)" }}
         >
           <span className="size-1.5 rounded-full bg-white/80" />
@@ -71,11 +71,11 @@ export function DonutProgress({
       ) : null}
 
       <div className="absolute inset-0 flex flex-col items-center justify-center">
-        <span className="text-[16px] font-semibold text-ink">
+        <span className="text-[16px] font-semibold text-foreground">
           {Math.round(clamped)}%
         </span>
         {label ? (
-          <span className="text-[10px] tracking-[0.3px] text-stone uppercase">{label}</span>
+          <span className="text-[10px] tracking-[0.3px] text-muted-foreground/80 uppercase">{label}</span>
         ) : null}
       </div>
     </div>
